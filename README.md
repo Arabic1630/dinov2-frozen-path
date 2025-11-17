@@ -5,8 +5,9 @@ This is the repository of  [Low-resource finetuning of foundation models beats s
 
 ## Use the pipeline[跟dinov3的几乎一样]
 
+```
 CUDA_VISIBLE_DEVICES=5,6 PYTHONPATH=${PWD} torchrun --standalone --nnodes=1 --nproc-per-node=2 dinov2/train/train.py --config-file dinov2/configs/train/vitl16-all-UNI.yaml --output-dir ./results/vitl16-all-224-UNI/ train.dataset_path=Pathology:split=TRAIN:root=/data/tanyuyi/code/dinov3-frozen-path/dataset/pathology-all-224/:extra=/data/tanyuyi/code/dinov3-frozen-path/dataset/pathology-all-224/:sshid=13
-
+```
 
 
 
