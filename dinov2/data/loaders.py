@@ -13,7 +13,7 @@ from typing import Any, Callable, List, Optional, TypeVar
 import torch
 from torch.utils.data import Sampler
 
-from .datasets import ImageNet, ImageNet22k
+from .datasets import ImageNet, ImageNet22k,Pathology
 from .datasets.CustomImageDataset import CustomImageDataset
 from .samplers import EpochSampler, InfiniteSampler, ShardedInfiniteSampler
 
@@ -53,7 +53,7 @@ def _parse_dataset_str(dataset_str: str):
 
     for token in tokens[1:]:
         key, value = token.split("=")
-        assert key in ("root", "extra", "split")
+        # assert key in ("root", "extra", "split")
         kwargs[key] = value
 
     if name == "ImageNet":
@@ -64,6 +64,10 @@ def _parse_dataset_str(dataset_str: str):
         class_ = ImageNet22k
     elif name == "CustomImageDataset":
         class_ = CustomImageDataset
+    elif name == "Pathology":
+        class_ = Pathology
+        if "split" in kwargs:
+            kwargs["split"] = Pathology.Split[kwargs["split"]]
     else:
         raise ValueError(f'Unsupported dataset "{name}"')
 

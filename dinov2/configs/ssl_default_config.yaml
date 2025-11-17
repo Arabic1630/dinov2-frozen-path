@@ -69,6 +69,8 @@ train:
   OFFICIAL_EPOCH_LENGTH: 100 # change depending on your dataset
   cache_dataset: true
   centering: "sinkhorn_knopp" # or "sinkhorn_knopp" or "centering"
+  ###权重初始化
+  init_weights_from_chkpt: ""
 student:
   arch: vit_small # e.g. vit_large or vit_small or vit_giant2
   patch_size: 14 # important to use the checkpoints!

@@ -1,0 +1,19 @@
+I20251117 20:22:44 389296 dinov2 train.py:249] Starting training from iteration 0
+W20251117 20:22:48 389296 py.warnings warnings.py:109] /data/tanyuyi/code/dinov2-frozen-path/dinov2/data/samplers.py:132: UserWarning: # of dropped samples: 2
+  warnings.warn(f"# of dropped samples: {drop_count}")
+Traceback (most recent call last):
+  File "/data/tanyuyi/code/dinov2-frozen-path/dinov2/train/train.py", line 355, in <module>
+    main(args)
+  File "/data/tanyuyi/code/dinov2-frozen-path/dinov2/train/train.py", line 350, in main
+    do_train(cfg, model, resume=not args.no_resume)
+  File "/data/tanyuyi/code/dinov2-frozen-path/dinov2/train/train.py", line 277, in do_train
+    loss_dict = model.forward_backward(data, teacher_temp=teacher_temp)
+  File "/data/tanyuyi/code/dinov2-frozen-path/dinov2/train/ssl_meta_arch.py", line 420, in forward_backward
+    teacher_dino_softmaxed_centered_list, masked_teacher_ibot_softmaxed_centered = get_teacher_output()
+  File "/data/tanyuyi/anaconda3/envs/dinov2/lib/python3.9/site-packages/torch/utils/_contextlib.py", line 115, in decorate_context
+    return func(*args, **kwargs)
+  File "/data/tanyuyi/code/dinov2-frozen-path/dinov2/train/ssl_meta_arch.py", line 348, in get_teacher_output
+    teacher_backbone_output_dict = self.teacher.backbone(x, is_training=True)
+  File "/data/tanyuyi/anaconda3/envs/dinov2/lib/python3.9/site-packages/torch/nn/modules/module.py", line 1614, in __getattr__
+    raise AttributeError("'{}' object has no attribute '{}'".format(
+AttributeError: 'ModuleDict' object has no attribute 'backbone'

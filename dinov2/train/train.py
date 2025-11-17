@@ -60,8 +60,7 @@ For python-based LazyConfig, use "path.key=value".
         nargs=argparse.REMAINDER,
     )
     parser.add_argument(
-        "--output-dir",
-        "--output_dir",
+        "--output_dir","--output-dir",
         default="",
         type=str,
         help="Output directory to save logs and checkpoints",
@@ -224,7 +223,7 @@ def do_train(cfg, model, resume=False): # change resume to true?
     )
     # for one GPU use this, for several switch to sampler_type = SamplerType.SHARDED_INFINITE
     sampler_type = SamplerType.INFINITE
-    #sampler_type = SamplerType.SHARDED_INFINITE
+    sampler_type = SamplerType.SHARDED_INFINITE
     #sampler_type = SamplerType.EPOCH
     data_loader = make_data_loader(
         dataset=dataset,

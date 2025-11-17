@@ -20,6 +20,10 @@ from dinov2.utils.param_groups import get_params_groups_with_decay, fuse_params_
 from dinov2.fsdp import get_fsdp_wrapper, ShardedGradScaler, get_fsdp_modules, reshard_fsdp_model
 
 from dinov2.models.vision_transformer import BlockChunk
+from transformers import AutoModel
+import timm
+from transformers import  AutoModel
+from pathlib import Path
 
 
 try:
@@ -101,6 +105,121 @@ def get_downloaded_dino_reg_interpolated():
 
     return model
 
+# Adapter class to make UNI/Timm models compatible with DINOv2 interface
+class BackboneAdapter(nn.Module):
+    """Wraps a pretrained model to match DINOv2's expected interface"""
+    def __init__(self, pretrained_model):
+        super().__init__()
+        self.model = pretrained_model
+        self.embed_dim = getattr(pretrained_model, 'embed_dim', pretrained_model.num_features if hasattr(pretrained_model, 'num_features') else 1024)
+        self.num_register_tokens = 0  # UNI doesn't have register tokens
+        
+        # Enable dynamic input size if the model has patch_embed
+        if hasattr(self.model, 'patch_embed'):
+            self.model.patch_embed.strict_img_size = False
+            # Set dynamic image size flag
+            if hasattr(self.model.patch_embed, 'dynamic_img_size'):
+                self.model.patch_embed.dynamic_img_size = True
+    
+    def forward(self, x, masks=None, is_training=False):
+        """
+        Adapt the forward pass to match DINOv2's interface
+        Args:
+            x: input tensor or list of tensors
+            masks: optional mask or list of masks (not used by UNI, but passed through)
+            is_training: if True, return intermediate features
+        """
+        # Handle list of inputs (for global and local crops)
+        if isinstance(x, list):
+            # If masks is also a list, zip them; otherwise use None for each
+            if isinstance(masks, list):
+                mask_list = masks
+            else:
+                mask_list = [None] * len(x)
+            
+            outputs = []
+            for inp, mask in zip(x, mask_list):
+                out = self._forward_single(inp, mask, is_training)
+                outputs.append(out)
+            return outputs
+        else:
+            return self._forward_single(x, masks, is_training)
+    
+    def _forward_single(self, x, masks=None, is_training=False):
+        """Forward pass for a single input tensor"""
+        # Get features from the model
+        # Try different methods depending on the model type
+        if hasattr(self.model, 'forward_features'):
+            features = self.model.forward_features(x)
+        else:
+            features = self.model(x)
+        
+        # Handle different output formats
+        if isinstance(features, dict):
+            # Already in dict format
+            cls_token = features.get('x_norm_clstoken', features.get('cls_token', features['last_hidden_state'][:, 0]))
+            patch_tokens = features.get('x_norm_patchtokens', features.get('patch_tokens', features['last_hidden_state'][:, 1:]))
+        elif isinstance(features, torch.Tensor):
+            # Assume format: [CLS, patch_tokens...]
+            if features.dim() == 3:  # [batch, seq_len, dim]
+                cls_token = features[:, 0]
+                patch_tokens = features[:, 1:]
+            else:
+                # Pooled output only
+                cls_token = features
+                patch_tokens = features
+        else:
+            raise ValueError(f"Unexpected output format from pretrained model: {type(features)}")
+        
+        # Return in DINOv2 format
+        return {
+            "x_norm_clstoken": cls_token,
+            "x_norm_regtokens": torch.empty(cls_token.shape[0], 0, cls_token.shape[-1], device=cls_token.device),
+            "x_norm_patchtokens": patch_tokens,
+            "x_prenorm": features if isinstance(features, torch.Tensor) else cls_token,
+            "masks": masks,
+        }
+
+# this function is exactly the same as the one above, but with UNI
+def get_downloaded_dino_uni(checkpoint_path):
+    # model = torch.hub.load('facebookresearch/dinov2', 'dinov2_vits14_reg')
+    #model=torch.hub.load('facebookresearch/dinov2', 'dinov2_vitg14_reg')
+    # model = AutoModel.from_pretrained(checkpoint_path) #("MahmoodLab/UNI2-h")
+
+
+    ############### 有模型了，加载参数进去
+    if not Path(checkpoint_path).exists():
+        try:
+            timm_kwargs={
+                "dynamic_img_size": True,  # Enable dynamic input size
+                "num_classes": 0,  # Remove classification head
+                "init_values": 1e-5 # init_values need to be passed in to successfully load LayerScale parameters (e.g. - block.0.ls1.gamma)
+                }
+            pretrained_model = timm.create_model(checkpoint_path, pretrained=True, **timm_kwargs)
+
+        except Exception as e1:
+            # If dynamic_img_size is not supported, try without it
+            try:
+                timm_kwargs={
+                    "num_classes": 0,
+                    "init_values": 1e-5
+                }
+                pretrained_model = timm.create_model(checkpoint_path, pretrained=True, **timm_kwargs)
+                logger.info("Loaded model without dynamic_img_size, will be set manually")
+            except:
+                try:
+                    pretrained_model = AutoModel.from_pretrained(checkpoint_path)
+                except Exception as e:
+                    raise Exception(f"Failed to download {checkpoint_path} model, make sure that you were granted access and that you correctly registered your token") from e
+    elif not Path(checkpoint_path).is_dir():
+        chkpt = torch.load(checkpoint_path, map_location="cpu")
+        pretrained_model = None  # Need to handle this case
+    else:
+        raise ValueError(f"Unknown checkpoint type: {checkpoint_path}")
+    
+    # Wrap the model with the adapter
+    return BackboneAdapter(pretrained_model)
+
 # This function allows to continue finetuning in case of the training breaking or also just if more experiments should be conducted.
 # Both teacher and student are set here directly. It is easy to switch between vit_s and vit_g.
 def get_dino_finetuned_downloaded(cfg, embed_dim):
@@ -152,7 +271,7 @@ class SSLMetaArch(nn.Module):
         # This is commented out, because it was easier to create the model using the torch.hub, as this already returns the pretrained version with the correct architecture.
         #student_backbone, teacher_backbone, embed_dim = build_model_from_cfg(cfg)
         #embed_dim = 1536 # use for vit_g
-        embed_dim = 384 # use for vit_s
+        # embed_dim = 384 # use for vit_s
 
         # use for cut loading downloaded weights
         '''
@@ -161,8 +280,10 @@ class SSLMetaArch(nn.Module):
         '''
 
         # use for interpolated loading downloaded weights
+        '''
         student_backbone = get_downloaded_dino_interpolated()
         teacher_backbone = get_downloaded_dino_interpolated()
+        '''
 
         # use for interpolated loading downloaded weights with registern
         '''
@@ -171,19 +292,17 @@ class SSLMetaArch(nn.Module):
         '''
 
         # use for continuation with finetuned weights, in this case the dino head weights also have to be set
-        #student_backbone, teacher_backbone = get_dino_finetuned_downloaded(cfg, embed_dim)
+        # student_backbone, teacher_backbone = get_dino_finetuned_downloaded(cfg, embed_dim)
+        if self.cfg.train.init_weights_from_chkpt:
+            student_backbone = get_downloaded_dino_uni(self.cfg.train.init_weights_from_chkpt)
+            teacher_backbone = get_downloaded_dino_uni(self.cfg.train.init_weights_from_chkpt)
 
-        student_model_dict["backbone"] = student_backbone
-        teacher_model_dict["backbone"] = teacher_backbone
-        logger.info(f"OPTIONS -- architecture : embed_dim: {embed_dim}")
-
-        # this is no longer required to load the weights, the functions above are used for this purpose
-        if cfg.student.pretrained_weights:
-            chkpt = torch.load(cfg.student.pretrained_weights)
-            logger.info(f"OPTIONS -- pretrained weights: loading from {cfg.student.pretrained_weights}")
             student_model_dict["backbone"] = student_backbone
+            teacher_model_dict["backbone"] = teacher_backbone
+            
+            embed_dim = student_backbone.embed_dim
 
-        self.embed_dim = embed_dim
+        self.embed_dim = embed_dim #embed_dim-tyyy
         self.dino_out_dim = cfg.dino.head_n_prototypes
 
         self.do_dino = cfg.dino.loss_weight > 0

@@ -1,0 +1,3 @@
+I20251117 20:11:02 355960 dinov2 train.py:249] Starting training from iteration 0
+W20251117 20:11:06 355960 py.warnings warnings.py:109] /data/tanyuyi/code/dinov2-frozen-path/dinov2/data/samplers.py:132: UserWarning: # of dropped samples: 2
+  warnings.warn(f"# of dropped samples: {drop_count}")

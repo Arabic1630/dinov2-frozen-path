@@ -1,0 +1,1871 @@
+I20251117 21:24:02 553248 dinov2 config.py:59] git:
+  sha: ffb73cd426e77b07d288139e66a87357705de9d4, status: has uncommitted changes, branch: main
+
+I20251117 21:24:02 553248 dinov2 config.py:60] config_file: dinov2/configs/train/vitl16-all-UNI.yaml
+eval: 
+eval_only: False
+no_resume: False
+opts: ['train.dataset_path=Pathology:split=TRAIN:root=/data/tanyuyi/code/dinov3-frozen-path/dataset/pathology-all-224/:extra=/data/tanyuyi/code/dinov3-frozen-path/dataset/pathology-all-224/:sshid=13', 'train.output_dir=/data/tanyuyi/code/dinov2-frozen-path/results/vitl16-all-224-UNI']
+output_dir: /data/tanyuyi/code/dinov2-frozen-path/results/vitl16-all-224-UNI
+I20251117 21:24:02 553248 dinov2 config.py:26] sqrt scaling learning rate; base: 0.0002, new: 5e-05
+I20251117 21:24:02 553248 dinov2 config.py:33] MODEL:
+  WEIGHTS: ''
+compute_precision:
+  grad_scaler: true
+  teacher:
+    backbone:
+      sharding_strategy: SHARD_GRAD_OP
+      mixed_precision:
+        param_dtype: fp16
+        reduce_dtype: fp16
+        buffer_dtype: fp32
+    dino_head:
+      sharding_strategy: SHARD_GRAD_OP
+      mixed_precision:
+        param_dtype: fp16
+        reduce_dtype: fp16
+        buffer_dtype: fp32
+    ibot_head:
+      sharding_strategy: SHARD_GRAD_OP
+      mixed_precision:
+        param_dtype: fp16
+        reduce_dtype: fp16
+        buffer_dtype: fp32
+  student:
+    backbone:
+      sharding_strategy: SHARD_GRAD_OP
+      mixed_precision:
+        param_dtype: fp16
+        reduce_dtype: fp16
+        buffer_dtype: fp32
+    dino_head:
+      sharding_strategy: SHARD_GRAD_OP
+      mixed_precision:
+        param_dtype: fp16
+        reduce_dtype: fp32
+        buffer_dtype: fp32
+    ibot_head:
+      sharding_strategy: SHARD_GRAD_OP
+      mixed_precision:
+        param_dtype: fp16
+        reduce_dtype: fp32
+        buffer_dtype: fp32
+dino:
+  loss_weight: 1.0
+  head_n_prototypes: 65536
+  head_bottleneck_dim: 256
+  head_nlayers: 3
+  head_hidden_dim: 2048
+  koleo_loss_weight: 0.1
+ibot:
+  loss_weight: 1.0
+  mask_sample_probability: 0.5
+  mask_ratio_min_max:
+  - 0.1
+  - 0.5
+  separate_head: true
+  head_n_prototypes: 65536
+  head_bottleneck_dim: 256
+  head_nlayers: 3
+  head_hidden_dim: 2048
+train:
+  batch_size_per_gpu: 32
+  dataset_path: Pathology:split=TRAIN:root=/data/tanyuyi/code/dinov3-frozen-path/dataset/pathology-all-224/:extra=/data/tanyuyi/code/dinov3-frozen-path/dataset/pathology-all-224/:sshid=13
+  output_dir: /data/tanyuyi/code/dinov2-frozen-path/results/vitl16-all-224-UNI
+  saveckp_freq: 20
+  seed: 0
+  num_workers: 10
+  OFFICIAL_EPOCH_LENGTH: 1450
+  cache_dataset: true
+  centering: sinkhorn_knopp
+  init_weights_from_chkpt: hf-hub:MahmoodLab/uni
+  sshid: 13
+student:
+  arch: vit_large
+  patch_size: 16
+  drop_path_rate: 0.3
+  layerscale: 1.0e-05
+  drop_path_uniform: false
+  pretrained_weights: null
+  ffn_layer: swiglufused
+  block_chunks: 0
+  qkv_bias: false
+  proj_bias: true
+  ffn_bias: true
+  num_register_tokens: 0
+  interpolate_antialias: false
+  interpolate_offset: 0.1
+teacher:
+  momentum_teacher: 0.992
+  final_momentum_teacher: 1
+  warmup_teacher_temp: 0.04
+  teacher_temp: 0.07
+  warmup_teacher_temp_epochs: 30
+optim:
+  epochs: 100
+  weight_decay: 0.04
+  weight_decay_end: 0.4
+  base_lr: 0.0002
+  lr: 5.0e-05
+  warmup_epochs: 10
+  min_lr: 1.0e-06
+  clip_grad: 3.0
+  freeze_last_layer_epochs: 1
+  scaling_rule: sqrt_wrt_1024
+  patch_embed_lr_mult: 0.2
+  layerwise_decay: 0.9
+  adamw_beta1: 0.9
+  adamw_beta2: 0.999
+crops:
+  global_crops_scale:
+  - 0.32
+  - 1.0
+  local_crops_number: 8
+  local_crops_scale:
+  - 0.05
+  - 0.32
+  global_crops_size: 224
+  local_crops_size: 96
+evaluation:
+  eval_period_iterations: 12500
+head:
+  head_path: null
+checkpointing:
+  period: 3750
+  max_to_keep: 3
+
+I20251117 21:24:07 553248 timm.models._builder _builder.py:217] Loading pretrained weights from Hugging Face hub (MahmoodLab/uni)
+W20251117 21:24:08 553248 py.warnings warnings.py:109] /data/tanyuyi/anaconda3/envs/dinov2/lib/python3.9/site-packages/torch/_utils.py:776: UserWarning: TypedStorage is deprecated. It will be removed in the future and UntypedStorage will be the only storage class. This should only matter to you if you are using storages directly.  To access UntypedStorage directly, use tensor.untyped_storage() instead of tensor.storage()
+  return self.fget.__get__(instance, owner)()
+
+I20251117 21:24:13 553248 timm.models._builder _builder.py:217] Loading pretrained weights from Hugging Face hub (MahmoodLab/uni)
+I20251117 21:24:16 553248 dinov2 ssl_meta_arch.py:313] OPTIONS -- DINO
+I20251117 21:24:16 553248 dinov2 ssl_meta_arch.py:315] OPTIONS -- DINO -- loss_weight: 1.0
+I20251117 21:24:16 553248 dinov2 ssl_meta_arch.py:316] OPTIONS -- DINO -- head_n_prototypes: 65536
+I20251117 21:24:16 553248 dinov2 ssl_meta_arch.py:317] OPTIONS -- DINO -- head_bottleneck_dim: 256
+I20251117 21:24:16 553248 dinov2 ssl_meta_arch.py:318] OPTIONS -- DINO -- head_hidden_dim: 2048
+I20251117 21:24:16 553248 dinov2 ssl_meta_arch.py:330] OPTIONS -- DINO -- applying KOLEO regularization
+I20251117 21:24:16 553248 dinov2 ssl_meta_arch.py:341] OPTIONS -- IBOT
+I20251117 21:24:16 553248 dinov2 ssl_meta_arch.py:342] OPTIONS -- IBOT -- loss_weight: 1.0
+I20251117 21:24:16 553248 dinov2 ssl_meta_arch.py:343] OPTIONS -- IBOT masking -- ibot_mask_ratio_tuple: [0.1, 0.5]
+I20251117 21:24:16 553248 dinov2 ssl_meta_arch.py:344] OPTIONS -- IBOT masking -- ibot_mask_sample_probability: 0.5
+I20251117 21:24:16 553248 dinov2 ssl_meta_arch.py:352] OPTIONS -- IBOT -- loss_weight: 1.0
+I20251117 21:24:16 553248 dinov2 ssl_meta_arch.py:353] OPTIONS -- IBOT -- head_n_prototypes: 65536
+I20251117 21:24:16 553248 dinov2 ssl_meta_arch.py:354] OPTIONS -- IBOT -- head_bottleneck_dim: 256
+I20251117 21:24:16 553248 dinov2 ssl_meta_arch.py:355] OPTIONS -- IBOT -- head_hidden_dim: 2048
+I20251117 21:24:17 553248 dinov2 ssl_meta_arch.py:400] Student and Teacher are built: they are both vit_large network.
+I20251117 21:24:20 553248 dinov2 ssl_meta_arch.py:691] DISTRIBUTED FSDP -- preparing model for distributed training
+I20251117 21:24:20 553248 dinov2 train.py:340] Model:
+SSLMetaArch(
+  (dino_loss): DINOLoss()
+  (koleo_loss): KoLeoLoss(
+    (pdist): PairwiseDistance()
+  )
+  (ibot_patch_loss): iBOTPatchLoss()
+  (student): ModuleDict(
+    (backbone): FullyShardedDataParallel(
+      (_fsdp_wrapped_module): BackboneAdapter(
+        (model): VisionTransformer(
+          (patch_embed): PatchEmbed(
+            (proj): Conv2d(3, 1024, kernel_size=(16, 16), stride=(16, 16))
+            (norm): Identity()
+          )
+          (pos_drop): Dropout(p=0.0, inplace=False)
+          (patch_drop): Identity()
+          (norm_pre): Identity()
+          (blocks): Sequential(
+            (0): Block(
+              (norm1): LayerNorm((1024,), eps=1e-06, elementwise_affine=True)
+              (attn): Attention(
+                (qkv): Linear(in_features=1024, out_features=3072, bias=True)
+                (q_norm): Identity()
+                (k_norm): Identity()
+                (attn_drop): Dropout(p=0.0, inplace=False)
+                (norm): Identity()
+                (proj): Linear(in_features=1024, out_features=1024, bias=True)
+                (proj_drop): Dropout(p=0.0, inplace=False)
+              )
+              (ls1): LayerScale()
+              (drop_path1): Identity()
+              (norm2): LayerNorm((1024,), eps=1e-06, elementwise_affine=True)
+              (mlp): Mlp(
+                (fc1): Linear(in_features=1024, out_features=4096, bias=True)
+                (act): GELU(approximate='none')
+                (drop1): Dropout(p=0.0, inplace=False)
+                (norm): Identity()
+                (fc2): Linear(in_features=4096, out_features=1024, bias=True)
+                (drop2): Dropout(p=0.0, inplace=False)
+              )
+              (ls2): LayerScale()
+              (drop_path2): Identity()
+            )
+            (1): Block(
+              (norm1): LayerNorm((1024,), eps=1e-06, elementwise_affine=True)
+              (attn): Attention(
+                (qkv): Linear(in_features=1024, out_features=3072, bias=True)
+                (q_norm): Identity()
+                (k_norm): Identity()
+                (attn_drop): Dropout(p=0.0, inplace=False)
+                (norm): Identity()
+                (proj): Linear(in_features=1024, out_features=1024, bias=True)
+                (proj_drop): Dropout(p=0.0, inplace=False)
+              )
+              (ls1): LayerScale()
+              (drop_path1): Identity()
+              (norm2): LayerNorm((1024,), eps=1e-06, elementwise_affine=True)
+              (mlp): Mlp(
+                (fc1): Linear(in_features=1024, out_features=4096, bias=True)
+                (act): GELU(approximate='none')
+                (drop1): Dropout(p=0.0, inplace=False)
+                (norm): Identity()
+                (fc2): Linear(in_features=4096, out_features=1024, bias=True)
+                (drop2): Dropout(p=0.0, inplace=False)
+              )
+              (ls2): LayerScale()
+              (drop_path2): Identity()
+            )
+            (2): Block(
+              (norm1): LayerNorm((1024,), eps=1e-06, elementwise_affine=True)
+              (attn): Attention(
+                (qkv): Linear(in_features=1024, out_features=3072, bias=True)
+                (q_norm): Identity()
+                (k_norm): Identity()
+                (attn_drop): Dropout(p=0.0, inplace=False)
+                (norm): Identity()
+                (proj): Linear(in_features=1024, out_features=1024, bias=True)
+                (proj_drop): Dropout(p=0.0, inplace=False)
+              )
+              (ls1): LayerScale()
+              (drop_path1): Identity()
+              (norm2): LayerNorm((1024,), eps=1e-06, elementwise_affine=True)
+              (mlp): Mlp(
+                (fc1): Linear(in_features=1024, out_features=4096, bias=True)
+                (act): GELU(approximate='none')
+                (drop1): Dropout(p=0.0, inplace=False)
+                (norm): Identity()
+                (fc2): Linear(in_features=4096, out_features=1024, bias=True)
+                (drop2): Dropout(p=0.0, inplace=False)
+              )
+              (ls2): LayerScale()
+              (drop_path2): Identity()
+            )
+            (3): Block(
+              (norm1): LayerNorm((1024,), eps=1e-06, elementwise_affine=True)
+              (attn): Attention(
+                (qkv): Linear(in_features=1024, out_features=3072, bias=True)
+                (q_norm): Identity()
+                (k_norm): Identity()
+                (attn_drop): Dropout(p=0.0, inplace=False)
+                (norm): Identity()
+                (proj): Linear(in_features=1024, out_features=1024, bias=True)
+                (proj_drop): Dropout(p=0.0, inplace=False)
+              )
+              (ls1): LayerScale()
+              (drop_path1): Identity()
+              (norm2): LayerNorm((1024,), eps=1e-06, elementwise_affine=True)
+              (mlp): Mlp(
+                (fc1): Linear(in_features=1024, out_features=4096, bias=True)
+                (act): GELU(approximate='none')
+                (drop1): Dropout(p=0.0, inplace=False)
+                (norm): Identity()
+                (fc2): Linear(in_features=4096, out_features=1024, bias=True)
+                (drop2): Dropout(p=0.0, inplace=False)
+              )
+              (ls2): LayerScale()
+              (drop_path2): Identity()
+            )
+            (4): Block(
+              (norm1): LayerNorm((1024,), eps=1e-06, elementwise_affine=True)
+              (attn): Attention(
+                (qkv): Linear(in_features=1024, out_features=3072, bias=True)
+                (q_norm): Identity()
+                (k_norm): Identity()
+                (attn_drop): Dropout(p=0.0, inplace=False)
+                (norm): Identity()
+                (proj): Linear(in_features=1024, out_features=1024, bias=True)
+                (proj_drop): Dropout(p=0.0, inplace=False)
+              )
+              (ls1): LayerScale()
+              (drop_path1): Identity()
+              (norm2): LayerNorm((1024,), eps=1e-06, elementwise_affine=True)
+              (mlp): Mlp(
+                (fc1): Linear(in_features=1024, out_features=4096, bias=True)
+                (act): GELU(approximate='none')
+                (drop1): Dropout(p=0.0, inplace=False)
+                (norm): Identity()
+                (fc2): Linear(in_features=4096, out_features=1024, bias=True)
+                (drop2): Dropout(p=0.0, inplace=False)
+              )
+              (ls2): LayerScale()
+              (drop_path2): Identity()
+            )
+            (5): Block(
+              (norm1): LayerNorm((1024,), eps=1e-06, elementwise_affine=True)
+              (attn): Attention(
+                (qkv): Linear(in_features=1024, out_features=3072, bias=True)
+                (q_norm): Identity()
+                (k_norm): Identity()
+                (attn_drop): Dropout(p=0.0, inplace=False)
+                (norm): Identity()
+                (proj): Linear(in_features=1024, out_features=1024, bias=True)
+                (proj_drop): Dropout(p=0.0, inplace=False)
+              )
+              (ls1): LayerScale()
+              (drop_path1): Identity()
+              (norm2): LayerNorm((1024,), eps=1e-06, elementwise_affine=True)
+              (mlp): Mlp(
+                (fc1): Linear(in_features=1024, out_features=4096, bias=True)
+                (act): GELU(approximate='none')
+                (drop1): Dropout(p=0.0, inplace=False)
+                (norm): Identity()
+                (fc2): Linear(in_features=4096, out_features=1024, bias=True)
+                (drop2): Dropout(p=0.0, inplace=False)
+              )
+              (ls2): LayerScale()
+              (drop_path2): Identity()
+            )
+            (6): Block(
+              (norm1): LayerNorm((1024,), eps=1e-06, elementwise_affine=True)
+              (attn): Attention(
+                (qkv): Linear(in_features=1024, out_features=3072, bias=True)
+                (q_norm): Identity()
+                (k_norm): Identity()
+                (attn_drop): Dropout(p=0.0, inplace=False)
+                (norm): Identity()
+                (proj): Linear(in_features=1024, out_features=1024, bias=True)
+                (proj_drop): Dropout(p=0.0, inplace=False)
+              )
+              (ls1): LayerScale()
+              (drop_path1): Identity()
+              (norm2): LayerNorm((1024,), eps=1e-06, elementwise_affine=True)
+              (mlp): Mlp(
+                (fc1): Linear(in_features=1024, out_features=4096, bias=True)
+                (act): GELU(approximate='none')
+                (drop1): Dropout(p=0.0, inplace=False)
+                (norm): Identity()
+                (fc2): Linear(in_features=4096, out_features=1024, bias=True)
+                (drop2): Dropout(p=0.0, inplace=False)
+              )
+              (ls2): LayerScale()
+              (drop_path2): Identity()
+            )
+            (7): Block(
+              (norm1): LayerNorm((1024,), eps=1e-06, elementwise_affine=True)
+              (attn): Attention(
+                (qkv): Linear(in_features=1024, out_features=3072, bias=True)
+                (q_norm): Identity()
+                (k_norm): Identity()
+                (attn_drop): Dropout(p=0.0, inplace=False)
+                (norm): Identity()
+                (proj): Linear(in_features=1024, out_features=1024, bias=True)
+                (proj_drop): Dropout(p=0.0, inplace=False)
+              )
+              (ls1): LayerScale()
+              (drop_path1): Identity()
+              (norm2): LayerNorm((1024,), eps=1e-06, elementwise_affine=True)
+              (mlp): Mlp(
+                (fc1): Linear(in_features=1024, out_features=4096, bias=True)
+                (act): GELU(approximate='none')
+                (drop1): Dropout(p=0.0, inplace=False)
+                (norm): Identity()
+                (fc2): Linear(in_features=4096, out_features=1024, bias=True)
+                (drop2): Dropout(p=0.0, inplace=False)
+              )
+              (ls2): LayerScale()
+              (drop_path2): Identity()
+            )
+            (8): Block(
+              (norm1): LayerNorm((1024,), eps=1e-06, elementwise_affine=True)
+              (attn): Attention(
+                (qkv): Linear(in_features=1024, out_features=3072, bias=True)
+                (q_norm): Identity()
+                (k_norm): Identity()
+                (attn_drop): Dropout(p=0.0, inplace=False)
+                (norm): Identity()
+                (proj): Linear(in_features=1024, out_features=1024, bias=True)
+                (proj_drop): Dropout(p=0.0, inplace=False)
+              )
+              (ls1): LayerScale()
+              (drop_path1): Identity()
+              (norm2): LayerNorm((1024,), eps=1e-06, elementwise_affine=True)
+              (mlp): Mlp(
+                (fc1): Linear(in_features=1024, out_features=4096, bias=True)
+                (act): GELU(approximate='none')
+                (drop1): Dropout(p=0.0, inplace=False)
+                (norm): Identity()
+                (fc2): Linear(in_features=4096, out_features=1024, bias=True)
+                (drop2): Dropout(p=0.0, inplace=False)
+              )
+              (ls2): LayerScale()
+              (drop_path2): Identity()
+            )
+            (9): Block(
+              (norm1): LayerNorm((1024,), eps=1e-06, elementwise_affine=True)
+              (attn): Attention(
+                (qkv): Linear(in_features=1024, out_features=3072, bias=True)
+                (q_norm): Identity()
+                (k_norm): Identity()
+                (attn_drop): Dropout(p=0.0, inplace=False)
+                (norm): Identity()
+                (proj): Linear(in_features=1024, out_features=1024, bias=True)
+                (proj_drop): Dropout(p=0.0, inplace=False)
+              )
+              (ls1): LayerScale()
+              (drop_path1): Identity()
+              (norm2): LayerNorm((1024,), eps=1e-06, elementwise_affine=True)
+              (mlp): Mlp(
+                (fc1): Linear(in_features=1024, out_features=4096, bias=True)
+                (act): GELU(approximate='none')
+                (drop1): Dropout(p=0.0, inplace=False)
+                (norm): Identity()
+                (fc2): Linear(in_features=4096, out_features=1024, bias=True)
+                (drop2): Dropout(p=0.0, inplace=False)
+              )
+              (ls2): LayerScale()
+              (drop_path2): Identity()
+            )
+            (10): Block(
+              (norm1): LayerNorm((1024,), eps=1e-06, elementwise_affine=True)
+              (attn): Attention(
+                (qkv): Linear(in_features=1024, out_features=3072, bias=True)
+                (q_norm): Identity()
+                (k_norm): Identity()
+                (attn_drop): Dropout(p=0.0, inplace=False)
+                (norm): Identity()
+                (proj): Linear(in_features=1024, out_features=1024, bias=True)
+                (proj_drop): Dropout(p=0.0, inplace=False)
+              )
+              (ls1): LayerScale()
+              (drop_path1): Identity()
+              (norm2): LayerNorm((1024,), eps=1e-06, elementwise_affine=True)
+              (mlp): Mlp(
+                (fc1): Linear(in_features=1024, out_features=4096, bias=True)
+                (act): GELU(approximate='none')
+                (drop1): Dropout(p=0.0, inplace=False)
+                (norm): Identity()
+                (fc2): Linear(in_features=4096, out_features=1024, bias=True)
+                (drop2): Dropout(p=0.0, inplace=False)
+              )
+              (ls2): LayerScale()
+              (drop_path2): Identity()
+            )
+            (11): Block(
+              (norm1): LayerNorm((1024,), eps=1e-06, elementwise_affine=True)
+              (attn): Attention(
+                (qkv): Linear(in_features=1024, out_features=3072, bias=True)
+                (q_norm): Identity()
+                (k_norm): Identity()
+                (attn_drop): Dropout(p=0.0, inplace=False)
+                (norm): Identity()
+                (proj): Linear(in_features=1024, out_features=1024, bias=True)
+                (proj_drop): Dropout(p=0.0, inplace=False)
+              )
+              (ls1): LayerScale()
+              (drop_path1): Identity()
+              (norm2): LayerNorm((1024,), eps=1e-06, elementwise_affine=True)
+              (mlp): Mlp(
+                (fc1): Linear(in_features=1024, out_features=4096, bias=True)
+                (act): GELU(approximate='none')
+                (drop1): Dropout(p=0.0, inplace=False)
+                (norm): Identity()
+                (fc2): Linear(in_features=4096, out_features=1024, bias=True)
+                (drop2): Dropout(p=0.0, inplace=False)
+              )
+              (ls2): LayerScale()
+              (drop_path2): Identity()
+            )
+            (12): Block(
+              (norm1): LayerNorm((1024,), eps=1e-06, elementwise_affine=True)
+              (attn): Attention(
+                (qkv): Linear(in_features=1024, out_features=3072, bias=True)
+                (q_norm): Identity()
+                (k_norm): Identity()
+                (attn_drop): Dropout(p=0.0, inplace=False)
+                (norm): Identity()
+                (proj): Linear(in_features=1024, out_features=1024, bias=True)
+                (proj_drop): Dropout(p=0.0, inplace=False)
+              )
+              (ls1): LayerScale()
+              (drop_path1): Identity()
+              (norm2): LayerNorm((1024,), eps=1e-06, elementwise_affine=True)
+              (mlp): Mlp(
+                (fc1): Linear(in_features=1024, out_features=4096, bias=True)
+                (act): GELU(approximate='none')
+                (drop1): Dropout(p=0.0, inplace=False)
+                (norm): Identity()
+                (fc2): Linear(in_features=4096, out_features=1024, bias=True)
+                (drop2): Dropout(p=0.0, inplace=False)
+              )
+              (ls2): LayerScale()
+              (drop_path2): Identity()
+            )
+            (13): Block(
+              (norm1): LayerNorm((1024,), eps=1e-06, elementwise_affine=True)
+              (attn): Attention(
+                (qkv): Linear(in_features=1024, out_features=3072, bias=True)
+                (q_norm): Identity()
+                (k_norm): Identity()
+                (attn_drop): Dropout(p=0.0, inplace=False)
+                (norm): Identity()
+                (proj): Linear(in_features=1024, out_features=1024, bias=True)
+                (proj_drop): Dropout(p=0.0, inplace=False)
+              )
+              (ls1): LayerScale()
+              (drop_path1): Identity()
+              (norm2): LayerNorm((1024,), eps=1e-06, elementwise_affine=True)
+              (mlp): Mlp(
+                (fc1): Linear(in_features=1024, out_features=4096, bias=True)
+                (act): GELU(approximate='none')
+                (drop1): Dropout(p=0.0, inplace=False)
+                (norm): Identity()
+                (fc2): Linear(in_features=4096, out_features=1024, bias=True)
+                (drop2): Dropout(p=0.0, inplace=False)
+              )
+              (ls2): LayerScale()
+              (drop_path2): Identity()
+            )
+            (14): Block(
+              (norm1): LayerNorm((1024,), eps=1e-06, elementwise_affine=True)
+              (attn): Attention(
+                (qkv): Linear(in_features=1024, out_features=3072, bias=True)
+                (q_norm): Identity()
+                (k_norm): Identity()
+                (attn_drop): Dropout(p=0.0, inplace=False)
+                (norm): Identity()
+                (proj): Linear(in_features=1024, out_features=1024, bias=True)
+                (proj_drop): Dropout(p=0.0, inplace=False)
+              )
+              (ls1): LayerScale()
+              (drop_path1): Identity()
+              (norm2): LayerNorm((1024,), eps=1e-06, elementwise_affine=True)
+              (mlp): Mlp(
+                (fc1): Linear(in_features=1024, out_features=4096, bias=True)
+                (act): GELU(approximate='none')
+                (drop1): Dropout(p=0.0, inplace=False)
+                (norm): Identity()
+                (fc2): Linear(in_features=4096, out_features=1024, bias=True)
+                (drop2): Dropout(p=0.0, inplace=False)
+              )
+              (ls2): LayerScale()
+              (drop_path2): Identity()
+            )
+            (15): Block(
+              (norm1): LayerNorm((1024,), eps=1e-06, elementwise_affine=True)
+              (attn): Attention(
+                (qkv): Linear(in_features=1024, out_features=3072, bias=True)
+                (q_norm): Identity()
+                (k_norm): Identity()
+                (attn_drop): Dropout(p=0.0, inplace=False)
+                (norm): Identity()
+                (proj): Linear(in_features=1024, out_features=1024, bias=True)
+                (proj_drop): Dropout(p=0.0, inplace=False)
+              )
+              (ls1): LayerScale()
+              (drop_path1): Identity()
+              (norm2): LayerNorm((1024,), eps=1e-06, elementwise_affine=True)
+              (mlp): Mlp(
+                (fc1): Linear(in_features=1024, out_features=4096, bias=True)
+                (act): GELU(approximate='none')
+                (drop1): Dropout(p=0.0, inplace=False)
+                (norm): Identity()
+                (fc2): Linear(in_features=4096, out_features=1024, bias=True)
+                (drop2): Dropout(p=0.0, inplace=False)
+              )
+              (ls2): LayerScale()
+              (drop_path2): Identity()
+            )
+            (16): Block(
+              (norm1): LayerNorm((1024,), eps=1e-06, elementwise_affine=True)
+              (attn): Attention(
+                (qkv): Linear(in_features=1024, out_features=3072, bias=True)
+                (q_norm): Identity()
+                (k_norm): Identity()
+                (attn_drop): Dropout(p=0.0, inplace=False)
+                (norm): Identity()
+                (proj): Linear(in_features=1024, out_features=1024, bias=True)
+                (proj_drop): Dropout(p=0.0, inplace=False)
+              )
+              (ls1): LayerScale()
+              (drop_path1): Identity()
+              (norm2): LayerNorm((1024,), eps=1e-06, elementwise_affine=True)
+              (mlp): Mlp(
+                (fc1): Linear(in_features=1024, out_features=4096, bias=True)
+                (act): GELU(approximate='none')
+                (drop1): Dropout(p=0.0, inplace=False)
+                (norm): Identity()
+                (fc2): Linear(in_features=4096, out_features=1024, bias=True)
+                (drop2): Dropout(p=0.0, inplace=False)
+              )
+              (ls2): LayerScale()
+              (drop_path2): Identity()
+            )
+            (17): Block(
+              (norm1): LayerNorm((1024,), eps=1e-06, elementwise_affine=True)
+              (attn): Attention(
+                (qkv): Linear(in_features=1024, out_features=3072, bias=True)
+                (q_norm): Identity()
+                (k_norm): Identity()
+                (attn_drop): Dropout(p=0.0, inplace=False)
+                (norm): Identity()
+                (proj): Linear(in_features=1024, out_features=1024, bias=True)
+                (proj_drop): Dropout(p=0.0, inplace=False)
+              )
+              (ls1): LayerScale()
+              (drop_path1): Identity()
+              (norm2): LayerNorm((1024,), eps=1e-06, elementwise_affine=True)
+              (mlp): Mlp(
+                (fc1): Linear(in_features=1024, out_features=4096, bias=True)
+                (act): GELU(approximate='none')
+                (drop1): Dropout(p=0.0, inplace=False)
+                (norm): Identity()
+                (fc2): Linear(in_features=4096, out_features=1024, bias=True)
+                (drop2): Dropout(p=0.0, inplace=False)
+              )
+              (ls2): LayerScale()
+              (drop_path2): Identity()
+            )
+            (18): Block(
+              (norm1): LayerNorm((1024,), eps=1e-06, elementwise_affine=True)
+              (attn): Attention(
+                (qkv): Linear(in_features=1024, out_features=3072, bias=True)
+                (q_norm): Identity()
+                (k_norm): Identity()
+                (attn_drop): Dropout(p=0.0, inplace=False)
+                (norm): Identity()
+                (proj): Linear(in_features=1024, out_features=1024, bias=True)
+                (proj_drop): Dropout(p=0.0, inplace=False)
+              )
+              (ls1): LayerScale()
+              (drop_path1): Identity()
+              (norm2): LayerNorm((1024,), eps=1e-06, elementwise_affine=True)
+              (mlp): Mlp(
+                (fc1): Linear(in_features=1024, out_features=4096, bias=True)
+                (act): GELU(approximate='none')
+                (drop1): Dropout(p=0.0, inplace=False)
+                (norm): Identity()
+                (fc2): Linear(in_features=4096, out_features=1024, bias=True)
+                (drop2): Dropout(p=0.0, inplace=False)
+              )
+              (ls2): LayerScale()
+              (drop_path2): Identity()
+            )
+            (19): Block(
+              (norm1): LayerNorm((1024,), eps=1e-06, elementwise_affine=True)
+              (attn): Attention(
+                (qkv): Linear(in_features=1024, out_features=3072, bias=True)
+                (q_norm): Identity()
+                (k_norm): Identity()
+                (attn_drop): Dropout(p=0.0, inplace=False)
+                (norm): Identity()
+                (proj): Linear(in_features=1024, out_features=1024, bias=True)
+                (proj_drop): Dropout(p=0.0, inplace=False)
+              )
+              (ls1): LayerScale()
+              (drop_path1): Identity()
+              (norm2): LayerNorm((1024,), eps=1e-06, elementwise_affine=True)
+              (mlp): Mlp(
+                (fc1): Linear(in_features=1024, out_features=4096, bias=True)
+                (act): GELU(approximate='none')
+                (drop1): Dropout(p=0.0, inplace=False)
+                (norm): Identity()
+                (fc2): Linear(in_features=4096, out_features=1024, bias=True)
+                (drop2): Dropout(p=0.0, inplace=False)
+              )
+              (ls2): LayerScale()
+              (drop_path2): Identity()
+            )
+            (20): Block(
+              (norm1): LayerNorm((1024,), eps=1e-06, elementwise_affine=True)
+              (attn): Attention(
+                (qkv): Linear(in_features=1024, out_features=3072, bias=True)
+                (q_norm): Identity()
+                (k_norm): Identity()
+                (attn_drop): Dropout(p=0.0, inplace=False)
+                (norm): Identity()
+                (proj): Linear(in_features=1024, out_features=1024, bias=True)
+                (proj_drop): Dropout(p=0.0, inplace=False)
+              )
+              (ls1): LayerScale()
+              (drop_path1): Identity()
+              (norm2): LayerNorm((1024,), eps=1e-06, elementwise_affine=True)
+              (mlp): Mlp(
+                (fc1): Linear(in_features=1024, out_features=4096, bias=True)
+                (act): GELU(approximate='none')
+                (drop1): Dropout(p=0.0, inplace=False)
+                (norm): Identity()
+                (fc2): Linear(in_features=4096, out_features=1024, bias=True)
+                (drop2): Dropout(p=0.0, inplace=False)
+              )
+              (ls2): LayerScale()
+              (drop_path2): Identity()
+            )
+            (21): Block(
+              (norm1): LayerNorm((1024,), eps=1e-06, elementwise_affine=True)
+              (attn): Attention(
+                (qkv): Linear(in_features=1024, out_features=3072, bias=True)
+                (q_norm): Identity()
+                (k_norm): Identity()
+                (attn_drop): Dropout(p=0.0, inplace=False)
+                (norm): Identity()
+                (proj): Linear(in_features=1024, out_features=1024, bias=True)
+                (proj_drop): Dropout(p=0.0, inplace=False)
+              )
+              (ls1): LayerScale()
+              (drop_path1): Identity()
+              (norm2): LayerNorm((1024,), eps=1e-06, elementwise_affine=True)
+              (mlp): Mlp(
+                (fc1): Linear(in_features=1024, out_features=4096, bias=True)
+                (act): GELU(approximate='none')
+                (drop1): Dropout(p=0.0, inplace=False)
+                (norm): Identity()
+                (fc2): Linear(in_features=4096, out_features=1024, bias=True)
+                (drop2): Dropout(p=0.0, inplace=False)
+              )
+              (ls2): LayerScale()
+              (drop_path2): Identity()
+            )
+            (22): Block(
+              (norm1): LayerNorm((1024,), eps=1e-06, elementwise_affine=True)
+              (attn): Attention(
+                (qkv): Linear(in_features=1024, out_features=3072, bias=True)
+                (q_norm): Identity()
+                (k_norm): Identity()
+                (attn_drop): Dropout(p=0.0, inplace=False)
+                (norm): Identity()
+                (proj): Linear(in_features=1024, out_features=1024, bias=True)
+                (proj_drop): Dropout(p=0.0, inplace=False)
+              )
+              (ls1): LayerScale()
+              (drop_path1): Identity()
+              (norm2): LayerNorm((1024,), eps=1e-06, elementwise_affine=True)
+              (mlp): Mlp(
+                (fc1): Linear(in_features=1024, out_features=4096, bias=True)
+                (act): GELU(approximate='none')
+                (drop1): Dropout(p=0.0, inplace=False)
+                (norm): Identity()
+                (fc2): Linear(in_features=4096, out_features=1024, bias=True)
+                (drop2): Dropout(p=0.0, inplace=False)
+              )
+              (ls2): LayerScale()
+              (drop_path2): Identity()
+            )
+            (23): Block(
+              (norm1): LayerNorm((1024,), eps=1e-06, elementwise_affine=True)
+              (attn): Attention(
+                (qkv): Linear(in_features=1024, out_features=3072, bias=True)
+                (q_norm): Identity()
+                (k_norm): Identity()
+                (attn_drop): Dropout(p=0.0, inplace=False)
+                (norm): Identity()
+                (proj): Linear(in_features=1024, out_features=1024, bias=True)
+                (proj_drop): Dropout(p=0.0, inplace=False)
+              )
+              (ls1): LayerScale()
+              (drop_path1): Identity()
+              (norm2): LayerNorm((1024,), eps=1e-06, elementwise_affine=True)
+              (mlp): Mlp(
+                (fc1): Linear(in_features=1024, out_features=4096, bias=True)
+                (act): GELU(approximate='none')
+                (drop1): Dropout(p=0.0, inplace=False)
+                (norm): Identity()
+                (fc2): Linear(in_features=4096, out_features=1024, bias=True)
+                (drop2): Dropout(p=0.0, inplace=False)
+              )
+              (ls2): LayerScale()
+              (drop_path2): Identity()
+            )
+          )
+          (norm): LayerNorm((1024,), eps=1e-06, elementwise_affine=True)
+          (fc_norm): Identity()
+          (head_drop): Dropout(p=0.0, inplace=False)
+          (head): Identity()
+        )
+      )
+    )
+    (dino_head): FullyShardedDataParallel(
+      (_fsdp_wrapped_module): DINOHead(
+        (mlp): Sequential(
+          (0): Linear(in_features=1024, out_features=2048, bias=True)
+          (1): GELU(approximate='none')
+          (2): Linear(in_features=2048, out_features=2048, bias=True)
+          (3): GELU(approximate='none')
+          (4): Linear(in_features=2048, out_features=256, bias=True)
+        )
+        (last_layer): Linear(in_features=256, out_features=65536, bias=False)
+      )
+    )
+    (ibot_head): FullyShardedDataParallel(
+      (_fsdp_wrapped_module): DINOHead(
+        (mlp): Sequential(
+          (0): Linear(in_features=1024, out_features=2048, bias=True)
+          (1): GELU(approximate='none')
+          (2): Linear(in_features=2048, out_features=2048, bias=True)
+          (3): GELU(approximate='none')
+          (4): Linear(in_features=2048, out_features=256, bias=True)
+        )
+        (last_layer): Linear(in_features=256, out_features=65536, bias=False)
+      )
+    )
+  )
+  (teacher): ModuleDict(
+    (backbone): FullyShardedDataParallel(
+      (_fsdp_wrapped_module): BackboneAdapter(
+        (model): VisionTransformer(
+          (patch_embed): PatchEmbed(
+            (proj): Conv2d(3, 1024, kernel_size=(16, 16), stride=(16, 16))
+            (norm): Identity()
+          )
+          (pos_drop): Dropout(p=0.0, inplace=False)
+          (patch_drop): Identity()
+          (norm_pre): Identity()
+          (blocks): Sequential(
+            (0): Block(
+              (norm1): LayerNorm((1024,), eps=1e-06, elementwise_affine=True)
+              (attn): Attention(
+                (qkv): Linear(in_features=1024, out_features=3072, bias=True)
+                (q_norm): Identity()
+                (k_norm): Identity()
+                (attn_drop): Dropout(p=0.0, inplace=False)
+                (norm): Identity()
+                (proj): Linear(in_features=1024, out_features=1024, bias=True)
+                (proj_drop): Dropout(p=0.0, inplace=False)
+              )
+              (ls1): LayerScale()
+              (drop_path1): Identity()
+              (norm2): LayerNorm((1024,), eps=1e-06, elementwise_affine=True)
+              (mlp): Mlp(
+                (fc1): Linear(in_features=1024, out_features=4096, bias=True)
+                (act): GELU(approximate='none')
+                (drop1): Dropout(p=0.0, inplace=False)
+                (norm): Identity()
+                (fc2): Linear(in_features=4096, out_features=1024, bias=True)
+                (drop2): Dropout(p=0.0, inplace=False)
+              )
+              (ls2): LayerScale()
+              (drop_path2): Identity()
+            )
+            (1): Block(
+              (norm1): LayerNorm((1024,), eps=1e-06, elementwise_affine=True)
+              (attn): Attention(
+                (qkv): Linear(in_features=1024, out_features=3072, bias=True)
+                (q_norm): Identity()
+                (k_norm): Identity()
+                (attn_drop): Dropout(p=0.0, inplace=False)
+                (norm): Identity()
+                (proj): Linear(in_features=1024, out_features=1024, bias=True)
+                (proj_drop): Dropout(p=0.0, inplace=False)
+              )
+              (ls1): LayerScale()
+              (drop_path1): Identity()
+              (norm2): LayerNorm((1024,), eps=1e-06, elementwise_affine=True)
+              (mlp): Mlp(
+                (fc1): Linear(in_features=1024, out_features=4096, bias=True)
+                (act): GELU(approximate='none')
+                (drop1): Dropout(p=0.0, inplace=False)
+                (norm): Identity()
+                (fc2): Linear(in_features=4096, out_features=1024, bias=True)
+                (drop2): Dropout(p=0.0, inplace=False)
+              )
+              (ls2): LayerScale()
+              (drop_path2): Identity()
+            )
+            (2): Block(
+              (norm1): LayerNorm((1024,), eps=1e-06, elementwise_affine=True)
+              (attn): Attention(
+                (qkv): Linear(in_features=1024, out_features=3072, bias=True)
+                (q_norm): Identity()
+                (k_norm): Identity()
+                (attn_drop): Dropout(p=0.0, inplace=False)
+                (norm): Identity()
+                (proj): Linear(in_features=1024, out_features=1024, bias=True)
+                (proj_drop): Dropout(p=0.0, inplace=False)
+              )
+              (ls1): LayerScale()
+              (drop_path1): Identity()
+              (norm2): LayerNorm((1024,), eps=1e-06, elementwise_affine=True)
+              (mlp): Mlp(
+                (fc1): Linear(in_features=1024, out_features=4096, bias=True)
+                (act): GELU(approximate='none')
+                (drop1): Dropout(p=0.0, inplace=False)
+                (norm): Identity()
+                (fc2): Linear(in_features=4096, out_features=1024, bias=True)
+                (drop2): Dropout(p=0.0, inplace=False)
+              )
+              (ls2): LayerScale()
+              (drop_path2): Identity()
+            )
+            (3): Block(
+              (norm1): LayerNorm((1024,), eps=1e-06, elementwise_affine=True)
+              (attn): Attention(
+                (qkv): Linear(in_features=1024, out_features=3072, bias=True)
+                (q_norm): Identity()
+                (k_norm): Identity()
+                (attn_drop): Dropout(p=0.0, inplace=False)
+                (norm): Identity()
+                (proj): Linear(in_features=1024, out_features=1024, bias=True)
+                (proj_drop): Dropout(p=0.0, inplace=False)
+              )
+              (ls1): LayerScale()
+              (drop_path1): Identity()
+              (norm2): LayerNorm((1024,), eps=1e-06, elementwise_affine=True)
+              (mlp): Mlp(
+                (fc1): Linear(in_features=1024, out_features=4096, bias=True)
+                (act): GELU(approximate='none')
+                (drop1): Dropout(p=0.0, inplace=False)
+                (norm): Identity()
+                (fc2): Linear(in_features=4096, out_features=1024, bias=True)
+                (drop2): Dropout(p=0.0, inplace=False)
+              )
+              (ls2): LayerScale()
+              (drop_path2): Identity()
+            )
+            (4): Block(
+              (norm1): LayerNorm((1024,), eps=1e-06, elementwise_affine=True)
+              (attn): Attention(
+                (qkv): Linear(in_features=1024, out_features=3072, bias=True)
+                (q_norm): Identity()
+                (k_norm): Identity()
+                (attn_drop): Dropout(p=0.0, inplace=False)
+                (norm): Identity()
+                (proj): Linear(in_features=1024, out_features=1024, bias=True)
+                (proj_drop): Dropout(p=0.0, inplace=False)
+              )
+              (ls1): LayerScale()
+              (drop_path1): Identity()
+              (norm2): LayerNorm((1024,), eps=1e-06, elementwise_affine=True)
+              (mlp): Mlp(
+                (fc1): Linear(in_features=1024, out_features=4096, bias=True)
+                (act): GELU(approximate='none')
+                (drop1): Dropout(p=0.0, inplace=False)
+                (norm): Identity()
+                (fc2): Linear(in_features=4096, out_features=1024, bias=True)
+                (drop2): Dropout(p=0.0, inplace=False)
+              )
+              (ls2): LayerScale()
+              (drop_path2): Identity()
+            )
+            (5): Block(
+              (norm1): LayerNorm((1024,), eps=1e-06, elementwise_affine=True)
+              (attn): Attention(
+                (qkv): Linear(in_features=1024, out_features=3072, bias=True)
+                (q_norm): Identity()
+                (k_norm): Identity()
+                (attn_drop): Dropout(p=0.0, inplace=False)
+                (norm): Identity()
+                (proj): Linear(in_features=1024, out_features=1024, bias=True)
+                (proj_drop): Dropout(p=0.0, inplace=False)
+              )
+              (ls1): LayerScale()
+              (drop_path1): Identity()
+              (norm2): LayerNorm((1024,), eps=1e-06, elementwise_affine=True)
+              (mlp): Mlp(
+                (fc1): Linear(in_features=1024, out_features=4096, bias=True)
+                (act): GELU(approximate='none')
+                (drop1): Dropout(p=0.0, inplace=False)
+                (norm): Identity()
+                (fc2): Linear(in_features=4096, out_features=1024, bias=True)
+                (drop2): Dropout(p=0.0, inplace=False)
+              )
+              (ls2): LayerScale()
+              (drop_path2): Identity()
+            )
+            (6): Block(
+              (norm1): LayerNorm((1024,), eps=1e-06, elementwise_affine=True)
+              (attn): Attention(
+                (qkv): Linear(in_features=1024, out_features=3072, bias=True)
+                (q_norm): Identity()
+                (k_norm): Identity()
+                (attn_drop): Dropout(p=0.0, inplace=False)
+                (norm): Identity()
+                (proj): Linear(in_features=1024, out_features=1024, bias=True)
+                (proj_drop): Dropout(p=0.0, inplace=False)
+              )
+              (ls1): LayerScale()
+              (drop_path1): Identity()
+              (norm2): LayerNorm((1024,), eps=1e-06, elementwise_affine=True)
+              (mlp): Mlp(
+                (fc1): Linear(in_features=1024, out_features=4096, bias=True)
+                (act): GELU(approximate='none')
+                (drop1): Dropout(p=0.0, inplace=False)
+                (norm): Identity()
+                (fc2): Linear(in_features=4096, out_features=1024, bias=True)
+                (drop2): Dropout(p=0.0, inplace=False)
+              )
+              (ls2): LayerScale()
+              (drop_path2): Identity()
+            )
+            (7): Block(
+              (norm1): LayerNorm((1024,), eps=1e-06, elementwise_affine=True)
+              (attn): Attention(
+                (qkv): Linear(in_features=1024, out_features=3072, bias=True)
+                (q_norm): Identity()
+                (k_norm): Identity()
+                (attn_drop): Dropout(p=0.0, inplace=False)
+                (norm): Identity()
+                (proj): Linear(in_features=1024, out_features=1024, bias=True)
+                (proj_drop): Dropout(p=0.0, inplace=False)
+              )
+              (ls1): LayerScale()
+              (drop_path1): Identity()
+              (norm2): LayerNorm((1024,), eps=1e-06, elementwise_affine=True)
+              (mlp): Mlp(
+                (fc1): Linear(in_features=1024, out_features=4096, bias=True)
+                (act): GELU(approximate='none')
+                (drop1): Dropout(p=0.0, inplace=False)
+                (norm): Identity()
+                (fc2): Linear(in_features=4096, out_features=1024, bias=True)
+                (drop2): Dropout(p=0.0, inplace=False)
+              )
+              (ls2): LayerScale()
+              (drop_path2): Identity()
+            )
+            (8): Block(
+              (norm1): LayerNorm((1024,), eps=1e-06, elementwise_affine=True)
+              (attn): Attention(
+                (qkv): Linear(in_features=1024, out_features=3072, bias=True)
+                (q_norm): Identity()
+                (k_norm): Identity()
+                (attn_drop): Dropout(p=0.0, inplace=False)
+                (norm): Identity()
+                (proj): Linear(in_features=1024, out_features=1024, bias=True)
+                (proj_drop): Dropout(p=0.0, inplace=False)
+              )
+              (ls1): LayerScale()
+              (drop_path1): Identity()
+              (norm2): LayerNorm((1024,), eps=1e-06, elementwise_affine=True)
+              (mlp): Mlp(
+                (fc1): Linear(in_features=1024, out_features=4096, bias=True)
+                (act): GELU(approximate='none')
+                (drop1): Dropout(p=0.0, inplace=False)
+                (norm): Identity()
+                (fc2): Linear(in_features=4096, out_features=1024, bias=True)
+                (drop2): Dropout(p=0.0, inplace=False)
+              )
+              (ls2): LayerScale()
+              (drop_path2): Identity()
+            )
+            (9): Block(
+              (norm1): LayerNorm((1024,), eps=1e-06, elementwise_affine=True)
+              (attn): Attention(
+                (qkv): Linear(in_features=1024, out_features=3072, bias=True)
+                (q_norm): Identity()
+                (k_norm): Identity()
+                (attn_drop): Dropout(p=0.0, inplace=False)
+                (norm): Identity()
+                (proj): Linear(in_features=1024, out_features=1024, bias=True)
+                (proj_drop): Dropout(p=0.0, inplace=False)
+              )
+              (ls1): LayerScale()
+              (drop_path1): Identity()
+              (norm2): LayerNorm((1024,), eps=1e-06, elementwise_affine=True)
+              (mlp): Mlp(
+                (fc1): Linear(in_features=1024, out_features=4096, bias=True)
+                (act): GELU(approximate='none')
+                (drop1): Dropout(p=0.0, inplace=False)
+                (norm): Identity()
+                (fc2): Linear(in_features=4096, out_features=1024, bias=True)
+                (drop2): Dropout(p=0.0, inplace=False)
+              )
+              (ls2): LayerScale()
+              (drop_path2): Identity()
+            )
+            (10): Block(
+              (norm1): LayerNorm((1024,), eps=1e-06, elementwise_affine=True)
+              (attn): Attention(
+                (qkv): Linear(in_features=1024, out_features=3072, bias=True)
+                (q_norm): Identity()
+                (k_norm): Identity()
+                (attn_drop): Dropout(p=0.0, inplace=False)
+                (norm): Identity()
+                (proj): Linear(in_features=1024, out_features=1024, bias=True)
+                (proj_drop): Dropout(p=0.0, inplace=False)
+              )
+              (ls1): LayerScale()
+              (drop_path1): Identity()
+              (norm2): LayerNorm((1024,), eps=1e-06, elementwise_affine=True)
+              (mlp): Mlp(
+                (fc1): Linear(in_features=1024, out_features=4096, bias=True)
+                (act): GELU(approximate='none')
+                (drop1): Dropout(p=0.0, inplace=False)
+                (norm): Identity()
+                (fc2): Linear(in_features=4096, out_features=1024, bias=True)
+                (drop2): Dropout(p=0.0, inplace=False)
+              )
+              (ls2): LayerScale()
+              (drop_path2): Identity()
+            )
+            (11): Block(
+              (norm1): LayerNorm((1024,), eps=1e-06, elementwise_affine=True)
+              (attn): Attention(
+                (qkv): Linear(in_features=1024, out_features=3072, bias=True)
+                (q_norm): Identity()
+                (k_norm): Identity()
+                (attn_drop): Dropout(p=0.0, inplace=False)
+                (norm): Identity()
+                (proj): Linear(in_features=1024, out_features=1024, bias=True)
+                (proj_drop): Dropout(p=0.0, inplace=False)
+              )
+              (ls1): LayerScale()
+              (drop_path1): Identity()
+              (norm2): LayerNorm((1024,), eps=1e-06, elementwise_affine=True)
+              (mlp): Mlp(
+                (fc1): Linear(in_features=1024, out_features=4096, bias=True)
+                (act): GELU(approximate='none')
+                (drop1): Dropout(p=0.0, inplace=False)
+                (norm): Identity()
+                (fc2): Linear(in_features=4096, out_features=1024, bias=True)
+                (drop2): Dropout(p=0.0, inplace=False)
+              )
+              (ls2): LayerScale()
+              (drop_path2): Identity()
+            )
+            (12): Block(
+              (norm1): LayerNorm((1024,), eps=1e-06, elementwise_affine=True)
+              (attn): Attention(
+                (qkv): Linear(in_features=1024, out_features=3072, bias=True)
+                (q_norm): Identity()
+                (k_norm): Identity()
+                (attn_drop): Dropout(p=0.0, inplace=False)
+                (norm): Identity()
+                (proj): Linear(in_features=1024, out_features=1024, bias=True)
+                (proj_drop): Dropout(p=0.0, inplace=False)
+              )
+              (ls1): LayerScale()
+              (drop_path1): Identity()
+              (norm2): LayerNorm((1024,), eps=1e-06, elementwise_affine=True)
+              (mlp): Mlp(
+                (fc1): Linear(in_features=1024, out_features=4096, bias=True)
+                (act): GELU(approximate='none')
+                (drop1): Dropout(p=0.0, inplace=False)
+                (norm): Identity()
+                (fc2): Linear(in_features=4096, out_features=1024, bias=True)
+                (drop2): Dropout(p=0.0, inplace=False)
+              )
+              (ls2): LayerScale()
+              (drop_path2): Identity()
+            )
+            (13): Block(
+              (norm1): LayerNorm((1024,), eps=1e-06, elementwise_affine=True)
+              (attn): Attention(
+                (qkv): Linear(in_features=1024, out_features=3072, bias=True)
+                (q_norm): Identity()
+                (k_norm): Identity()
+                (attn_drop): Dropout(p=0.0, inplace=False)
+                (norm): Identity()
+                (proj): Linear(in_features=1024, out_features=1024, bias=True)
+                (proj_drop): Dropout(p=0.0, inplace=False)
+              )
+              (ls1): LayerScale()
+              (drop_path1): Identity()
+              (norm2): LayerNorm((1024,), eps=1e-06, elementwise_affine=True)
+              (mlp): Mlp(
+                (fc1): Linear(in_features=1024, out_features=4096, bias=True)
+                (act): GELU(approximate='none')
+                (drop1): Dropout(p=0.0, inplace=False)
+                (norm): Identity()
+                (fc2): Linear(in_features=4096, out_features=1024, bias=True)
+                (drop2): Dropout(p=0.0, inplace=False)
+              )
+              (ls2): LayerScale()
+              (drop_path2): Identity()
+            )
+            (14): Block(
+              (norm1): LayerNorm((1024,), eps=1e-06, elementwise_affine=True)
+              (attn): Attention(
+                (qkv): Linear(in_features=1024, out_features=3072, bias=True)
+                (q_norm): Identity()
+                (k_norm): Identity()
+                (attn_drop): Dropout(p=0.0, inplace=False)
+                (norm): Identity()
+                (proj): Linear(in_features=1024, out_features=1024, bias=True)
+                (proj_drop): Dropout(p=0.0, inplace=False)
+              )
+              (ls1): LayerScale()
+              (drop_path1): Identity()
+              (norm2): LayerNorm((1024,), eps=1e-06, elementwise_affine=True)
+              (mlp): Mlp(
+                (fc1): Linear(in_features=1024, out_features=4096, bias=True)
+                (act): GELU(approximate='none')
+                (drop1): Dropout(p=0.0, inplace=False)
+                (norm): Identity()
+                (fc2): Linear(in_features=4096, out_features=1024, bias=True)
+                (drop2): Dropout(p=0.0, inplace=False)
+              )
+              (ls2): LayerScale()
+              (drop_path2): Identity()
+            )
+            (15): Block(
+              (norm1): LayerNorm((1024,), eps=1e-06, elementwise_affine=True)
+              (attn): Attention(
+                (qkv): Linear(in_features=1024, out_features=3072, bias=True)
+                (q_norm): Identity()
+                (k_norm): Identity()
+                (attn_drop): Dropout(p=0.0, inplace=False)
+                (norm): Identity()
+                (proj): Linear(in_features=1024, out_features=1024, bias=True)
+                (proj_drop): Dropout(p=0.0, inplace=False)
+              )
+              (ls1): LayerScale()
+              (drop_path1): Identity()
+              (norm2): LayerNorm((1024,), eps=1e-06, elementwise_affine=True)
+              (mlp): Mlp(
+                (fc1): Linear(in_features=1024, out_features=4096, bias=True)
+                (act): GELU(approximate='none')
+                (drop1): Dropout(p=0.0, inplace=False)
+                (norm): Identity()
+                (fc2): Linear(in_features=4096, out_features=1024, bias=True)
+                (drop2): Dropout(p=0.0, inplace=False)
+              )
+              (ls2): LayerScale()
+              (drop_path2): Identity()
+            )
+            (16): Block(
+              (norm1): LayerNorm((1024,), eps=1e-06, elementwise_affine=True)
+              (attn): Attention(
+                (qkv): Linear(in_features=1024, out_features=3072, bias=True)
+                (q_norm): Identity()
+                (k_norm): Identity()
+                (attn_drop): Dropout(p=0.0, inplace=False)
+                (norm): Identity()
+                (proj): Linear(in_features=1024, out_features=1024, bias=True)
+                (proj_drop): Dropout(p=0.0, inplace=False)
+              )
+              (ls1): LayerScale()
+              (drop_path1): Identity()
+              (norm2): LayerNorm((1024,), eps=1e-06, elementwise_affine=True)
+              (mlp): Mlp(
+                (fc1): Linear(in_features=1024, out_features=4096, bias=True)
+                (act): GELU(approximate='none')
+                (drop1): Dropout(p=0.0, inplace=False)
+                (norm): Identity()
+                (fc2): Linear(in_features=4096, out_features=1024, bias=True)
+                (drop2): Dropout(p=0.0, inplace=False)
+              )
+              (ls2): LayerScale()
+              (drop_path2): Identity()
+            )
+            (17): Block(
+              (norm1): LayerNorm((1024,), eps=1e-06, elementwise_affine=True)
+              (attn): Attention(
+                (qkv): Linear(in_features=1024, out_features=3072, bias=True)
+                (q_norm): Identity()
+                (k_norm): Identity()
+                (attn_drop): Dropout(p=0.0, inplace=False)
+                (norm): Identity()
+                (proj): Linear(in_features=1024, out_features=1024, bias=True)
+                (proj_drop): Dropout(p=0.0, inplace=False)
+              )
+              (ls1): LayerScale()
+              (drop_path1): Identity()
+              (norm2): LayerNorm((1024,), eps=1e-06, elementwise_affine=True)
+              (mlp): Mlp(
+                (fc1): Linear(in_features=1024, out_features=4096, bias=True)
+                (act): GELU(approximate='none')
+                (drop1): Dropout(p=0.0, inplace=False)
+                (norm): Identity()
+                (fc2): Linear(in_features=4096, out_features=1024, bias=True)
+                (drop2): Dropout(p=0.0, inplace=False)
+              )
+              (ls2): LayerScale()
+              (drop_path2): Identity()
+            )
+            (18): Block(
+              (norm1): LayerNorm((1024,), eps=1e-06, elementwise_affine=True)
+              (attn): Attention(
+                (qkv): Linear(in_features=1024, out_features=3072, bias=True)
+                (q_norm): Identity()
+                (k_norm): Identity()
+                (attn_drop): Dropout(p=0.0, inplace=False)
+                (norm): Identity()
+                (proj): Linear(in_features=1024, out_features=1024, bias=True)
+                (proj_drop): Dropout(p=0.0, inplace=False)
+              )
+              (ls1): LayerScale()
+              (drop_path1): Identity()
+              (norm2): LayerNorm((1024,), eps=1e-06, elementwise_affine=True)
+              (mlp): Mlp(
+                (fc1): Linear(in_features=1024, out_features=4096, bias=True)
+                (act): GELU(approximate='none')
+                (drop1): Dropout(p=0.0, inplace=False)
+                (norm): Identity()
+                (fc2): Linear(in_features=4096, out_features=1024, bias=True)
+                (drop2): Dropout(p=0.0, inplace=False)
+              )
+              (ls2): LayerScale()
+              (drop_path2): Identity()
+            )
+            (19): Block(
+              (norm1): LayerNorm((1024,), eps=1e-06, elementwise_affine=True)
+              (attn): Attention(
+                (qkv): Linear(in_features=1024, out_features=3072, bias=True)
+                (q_norm): Identity()
+                (k_norm): Identity()
+                (attn_drop): Dropout(p=0.0, inplace=False)
+                (norm): Identity()
+                (proj): Linear(in_features=1024, out_features=1024, bias=True)
+                (proj_drop): Dropout(p=0.0, inplace=False)
+              )
+              (ls1): LayerScale()
+              (drop_path1): Identity()
+              (norm2): LayerNorm((1024,), eps=1e-06, elementwise_affine=True)
+              (mlp): Mlp(
+                (fc1): Linear(in_features=1024, out_features=4096, bias=True)
+                (act): GELU(approximate='none')
+                (drop1): Dropout(p=0.0, inplace=False)
+                (norm): Identity()
+                (fc2): Linear(in_features=4096, out_features=1024, bias=True)
+                (drop2): Dropout(p=0.0, inplace=False)
+              )
+              (ls2): LayerScale()
+              (drop_path2): Identity()
+            )
+            (20): Block(
+              (norm1): LayerNorm((1024,), eps=1e-06, elementwise_affine=True)
+              (attn): Attention(
+                (qkv): Linear(in_features=1024, out_features=3072, bias=True)
+                (q_norm): Identity()
+                (k_norm): Identity()
+                (attn_drop): Dropout(p=0.0, inplace=False)
+                (norm): Identity()
+                (proj): Linear(in_features=1024, out_features=1024, bias=True)
+                (proj_drop): Dropout(p=0.0, inplace=False)
+              )
+              (ls1): LayerScale()
+              (drop_path1): Identity()
+              (norm2): LayerNorm((1024,), eps=1e-06, elementwise_affine=True)
+              (mlp): Mlp(
+                (fc1): Linear(in_features=1024, out_features=4096, bias=True)
+                (act): GELU(approximate='none')
+                (drop1): Dropout(p=0.0, inplace=False)
+                (norm): Identity()
+                (fc2): Linear(in_features=4096, out_features=1024, bias=True)
+                (drop2): Dropout(p=0.0, inplace=False)
+              )
+              (ls2): LayerScale()
+              (drop_path2): Identity()
+            )
+            (21): Block(
+              (norm1): LayerNorm((1024,), eps=1e-06, elementwise_affine=True)
+              (attn): Attention(
+                (qkv): Linear(in_features=1024, out_features=3072, bias=True)
+                (q_norm): Identity()
+                (k_norm): Identity()
+                (attn_drop): Dropout(p=0.0, inplace=False)
+                (norm): Identity()
+                (proj): Linear(in_features=1024, out_features=1024, bias=True)
+                (proj_drop): Dropout(p=0.0, inplace=False)
+              )
+              (ls1): LayerScale()
+              (drop_path1): Identity()
+              (norm2): LayerNorm((1024,), eps=1e-06, elementwise_affine=True)
+              (mlp): Mlp(
+                (fc1): Linear(in_features=1024, out_features=4096, bias=True)
+                (act): GELU(approximate='none')
+                (drop1): Dropout(p=0.0, inplace=False)
+                (norm): Identity()
+                (fc2): Linear(in_features=4096, out_features=1024, bias=True)
+                (drop2): Dropout(p=0.0, inplace=False)
+              )
+              (ls2): LayerScale()
+              (drop_path2): Identity()
+            )
+            (22): Block(
+              (norm1): LayerNorm((1024,), eps=1e-06, elementwise_affine=True)
+              (attn): Attention(
+                (qkv): Linear(in_features=1024, out_features=3072, bias=True)
+                (q_norm): Identity()
+                (k_norm): Identity()
+                (attn_drop): Dropout(p=0.0, inplace=False)
+                (norm): Identity()
+                (proj): Linear(in_features=1024, out_features=1024, bias=True)
+                (proj_drop): Dropout(p=0.0, inplace=False)
+              )
+              (ls1): LayerScale()
+              (drop_path1): Identity()
+              (norm2): LayerNorm((1024,), eps=1e-06, elementwise_affine=True)
+              (mlp): Mlp(
+                (fc1): Linear(in_features=1024, out_features=4096, bias=True)
+                (act): GELU(approximate='none')
+                (drop1): Dropout(p=0.0, inplace=False)
+                (norm): Identity()
+                (fc2): Linear(in_features=4096, out_features=1024, bias=True)
+                (drop2): Dropout(p=0.0, inplace=False)
+              )
+              (ls2): LayerScale()
+              (drop_path2): Identity()
+            )
+            (23): Block(
+              (norm1): LayerNorm((1024,), eps=1e-06, elementwise_affine=True)
+              (attn): Attention(
+                (qkv): Linear(in_features=1024, out_features=3072, bias=True)
+                (q_norm): Identity()
+                (k_norm): Identity()
+                (attn_drop): Dropout(p=0.0, inplace=False)
+                (norm): Identity()
+                (proj): Linear(in_features=1024, out_features=1024, bias=True)
+                (proj_drop): Dropout(p=0.0, inplace=False)
+              )
+              (ls1): LayerScale()
+              (drop_path1): Identity()
+              (norm2): LayerNorm((1024,), eps=1e-06, elementwise_affine=True)
+              (mlp): Mlp(
+                (fc1): Linear(in_features=1024, out_features=4096, bias=True)
+                (act): GELU(approximate='none')
+                (drop1): Dropout(p=0.0, inplace=False)
+                (norm): Identity()
+                (fc2): Linear(in_features=4096, out_features=1024, bias=True)
+                (drop2): Dropout(p=0.0, inplace=False)
+              )
+              (ls2): LayerScale()
+              (drop_path2): Identity()
+            )
+          )
+          (norm): LayerNorm((1024,), eps=1e-06, elementwise_affine=True)
+          (fc_norm): Identity()
+          (head_drop): Dropout(p=0.0, inplace=False)
+          (head): Identity()
+        )
+      )
+    )
+    (dino_head): FullyShardedDataParallel(
+      (_fsdp_wrapped_module): DINOHead(
+        (mlp): Sequential(
+          (0): Linear(in_features=1024, out_features=2048, bias=True)
+          (1): GELU(approximate='none')
+          (2): Linear(in_features=2048, out_features=2048, bias=True)
+          (3): GELU(approximate='none')
+          (4): Linear(in_features=2048, out_features=256, bias=True)
+        )
+        (last_layer): Linear(in_features=256, out_features=65536, bias=False)
+      )
+    )
+    (ibot_head): FullyShardedDataParallel(
+      (_fsdp_wrapped_module): DINOHead(
+        (mlp): Sequential(
+          (0): Linear(in_features=1024, out_features=2048, bias=True)
+          (1): GELU(approximate='none')
+          (2): Linear(in_features=2048, out_features=2048, bias=True)
+          (3): GELU(approximate='none')
+          (4): Linear(in_features=2048, out_features=256, bias=True)
+        )
+        (last_layer): Linear(in_features=256, out_features=65536, bias=False)
+      )
+    )
+  )
+)
+I20251117 21:24:20 553248 dinov2 param_groups.py:54] else code branch
+I20251117 21:24:20 553248 dinov2 param_groups.py:77] model.cls_token: lr_multiplier: 1.0, wd_multiplier: 1.0
+I20251117 21:24:20 553248 dinov2 param_groups.py:77] model.pos_embed: lr_multiplier: 1.0, wd_multiplier: 1.0
+I20251117 21:24:20 553248 dinov2 param_groups.py:77] model.patch_embed.proj.weight: lr_multiplier: 0.2, wd_multiplier: 1.0
+I20251117 21:24:20 553248 dinov2 param_groups.py:77] model.patch_embed.proj.bias: lr_multiplier: 0.2, wd_multiplier: 0.0
+I20251117 21:24:20 553248 dinov2 param_groups.py:77] model.blocks.0.norm1.weight: lr_multiplier: 1.0, wd_multiplier: 0.0
+I20251117 21:24:20 553248 dinov2 param_groups.py:77] model.blocks.0.norm1.bias: lr_multiplier: 1.0, wd_multiplier: 0.0
+I20251117 21:24:20 553248 dinov2 param_groups.py:77] model.blocks.0.attn.qkv.weight: lr_multiplier: 1.0, wd_multiplier: 1.0
+I20251117 21:24:20 553248 dinov2 param_groups.py:77] model.blocks.0.attn.qkv.bias: lr_multiplier: 1.0, wd_multiplier: 0.0
+I20251117 21:24:20 553248 dinov2 param_groups.py:77] model.blocks.0.attn.proj.weight: lr_multiplier: 1.0, wd_multiplier: 1.0
+I20251117 21:24:20 553248 dinov2 param_groups.py:77] model.blocks.0.attn.proj.bias: lr_multiplier: 1.0, wd_multiplier: 0.0
+I20251117 21:24:20 553248 dinov2 param_groups.py:77] model.blocks.0.ls1.gamma: lr_multiplier: 1.0, wd_multiplier: 0.0
+I20251117 21:24:20 553248 dinov2 param_groups.py:77] model.blocks.0.norm2.weight: lr_multiplier: 1.0, wd_multiplier: 0.0
+I20251117 21:24:20 553248 dinov2 param_groups.py:77] model.blocks.0.norm2.bias: lr_multiplier: 1.0, wd_multiplier: 0.0
+I20251117 21:24:20 553248 dinov2 param_groups.py:77] model.blocks.0.mlp.fc1.weight: lr_multiplier: 1.0, wd_multiplier: 1.0
+I20251117 21:24:20 553248 dinov2 param_groups.py:77] model.blocks.0.mlp.fc1.bias: lr_multiplier: 1.0, wd_multiplier: 0.0
+I20251117 21:24:20 553248 dinov2 param_groups.py:77] model.blocks.0.mlp.fc2.weight: lr_multiplier: 1.0, wd_multiplier: 1.0
+I20251117 21:24:20 553248 dinov2 param_groups.py:77] model.blocks.0.mlp.fc2.bias: lr_multiplier: 1.0, wd_multiplier: 0.0
+I20251117 21:24:20 553248 dinov2 param_groups.py:77] model.blocks.0.ls2.gamma: lr_multiplier: 1.0, wd_multiplier: 0.0
+I20251117 21:24:20 553248 dinov2 param_groups.py:77] model.blocks.1.norm1.weight: lr_multiplier: 1.0, wd_multiplier: 0.0
+I20251117 21:24:20 553248 dinov2 param_groups.py:77] model.blocks.1.norm1.bias: lr_multiplier: 1.0, wd_multiplier: 0.0
+I20251117 21:24:20 553248 dinov2 param_groups.py:77] model.blocks.1.attn.qkv.weight: lr_multiplier: 1.0, wd_multiplier: 1.0
+I20251117 21:24:20 553248 dinov2 param_groups.py:77] model.blocks.1.attn.qkv.bias: lr_multiplier: 1.0, wd_multiplier: 0.0
+I20251117 21:24:20 553248 dinov2 param_groups.py:77] model.blocks.1.attn.proj.weight: lr_multiplier: 1.0, wd_multiplier: 1.0
+I20251117 21:24:20 553248 dinov2 param_groups.py:77] model.blocks.1.attn.proj.bias: lr_multiplier: 1.0, wd_multiplier: 0.0
+I20251117 21:24:20 553248 dinov2 param_groups.py:77] model.blocks.1.ls1.gamma: lr_multiplier: 1.0, wd_multiplier: 0.0
+I20251117 21:24:20 553248 dinov2 param_groups.py:77] model.blocks.1.norm2.weight: lr_multiplier: 1.0, wd_multiplier: 0.0
+I20251117 21:24:20 553248 dinov2 param_groups.py:77] model.blocks.1.norm2.bias: lr_multiplier: 1.0, wd_multiplier: 0.0
+I20251117 21:24:20 553248 dinov2 param_groups.py:77] model.blocks.1.mlp.fc1.weight: lr_multiplier: 1.0, wd_multiplier: 1.0
+I20251117 21:24:20 553248 dinov2 param_groups.py:77] model.blocks.1.mlp.fc1.bias: lr_multiplier: 1.0, wd_multiplier: 0.0
+I20251117 21:24:20 553248 dinov2 param_groups.py:77] model.blocks.1.mlp.fc2.weight: lr_multiplier: 1.0, wd_multiplier: 1.0
+I20251117 21:24:20 553248 dinov2 param_groups.py:77] model.blocks.1.mlp.fc2.bias: lr_multiplier: 1.0, wd_multiplier: 0.0
+I20251117 21:24:20 553248 dinov2 param_groups.py:77] model.blocks.1.ls2.gamma: lr_multiplier: 1.0, wd_multiplier: 0.0
+I20251117 21:24:20 553248 dinov2 param_groups.py:77] model.blocks.2.norm1.weight: lr_multiplier: 1.0, wd_multiplier: 0.0
+I20251117 21:24:20 553248 dinov2 param_groups.py:77] model.blocks.2.norm1.bias: lr_multiplier: 1.0, wd_multiplier: 0.0
+I20251117 21:24:20 553248 dinov2 param_groups.py:77] model.blocks.2.attn.qkv.weight: lr_multiplier: 1.0, wd_multiplier: 1.0
+I20251117 21:24:20 553248 dinov2 param_groups.py:77] model.blocks.2.attn.qkv.bias: lr_multiplier: 1.0, wd_multiplier: 0.0
+I20251117 21:24:20 553248 dinov2 param_groups.py:77] model.blocks.2.attn.proj.weight: lr_multiplier: 1.0, wd_multiplier: 1.0
+I20251117 21:24:20 553248 dinov2 param_groups.py:77] model.blocks.2.attn.proj.bias: lr_multiplier: 1.0, wd_multiplier: 0.0
+I20251117 21:24:20 553248 dinov2 param_groups.py:77] model.blocks.2.ls1.gamma: lr_multiplier: 1.0, wd_multiplier: 0.0
+I20251117 21:24:20 553248 dinov2 param_groups.py:77] model.blocks.2.norm2.weight: lr_multiplier: 1.0, wd_multiplier: 0.0
+I20251117 21:24:20 553248 dinov2 param_groups.py:77] model.blocks.2.norm2.bias: lr_multiplier: 1.0, wd_multiplier: 0.0
+I20251117 21:24:20 553248 dinov2 param_groups.py:77] model.blocks.2.mlp.fc1.weight: lr_multiplier: 1.0, wd_multiplier: 1.0
+I20251117 21:24:20 553248 dinov2 param_groups.py:77] model.blocks.2.mlp.fc1.bias: lr_multiplier: 1.0, wd_multiplier: 0.0
+I20251117 21:24:20 553248 dinov2 param_groups.py:77] model.blocks.2.mlp.fc2.weight: lr_multiplier: 1.0, wd_multiplier: 1.0
+I20251117 21:24:20 553248 dinov2 param_groups.py:77] model.blocks.2.mlp.fc2.bias: lr_multiplier: 1.0, wd_multiplier: 0.0
+I20251117 21:24:20 553248 dinov2 param_groups.py:77] model.blocks.2.ls2.gamma: lr_multiplier: 1.0, wd_multiplier: 0.0
+I20251117 21:24:20 553248 dinov2 param_groups.py:77] model.blocks.3.norm1.weight: lr_multiplier: 1.0, wd_multiplier: 0.0
+I20251117 21:24:20 553248 dinov2 param_groups.py:77] model.blocks.3.norm1.bias: lr_multiplier: 1.0, wd_multiplier: 0.0
+I20251117 21:24:20 553248 dinov2 param_groups.py:77] model.blocks.3.attn.qkv.weight: lr_multiplier: 1.0, wd_multiplier: 1.0
+I20251117 21:24:20 553248 dinov2 param_groups.py:77] model.blocks.3.attn.qkv.bias: lr_multiplier: 1.0, wd_multiplier: 0.0
+I20251117 21:24:20 553248 dinov2 param_groups.py:77] model.blocks.3.attn.proj.weight: lr_multiplier: 1.0, wd_multiplier: 1.0
+I20251117 21:24:20 553248 dinov2 param_groups.py:77] model.blocks.3.attn.proj.bias: lr_multiplier: 1.0, wd_multiplier: 0.0
+I20251117 21:24:20 553248 dinov2 param_groups.py:77] model.blocks.3.ls1.gamma: lr_multiplier: 1.0, wd_multiplier: 0.0
+I20251117 21:24:20 553248 dinov2 param_groups.py:77] model.blocks.3.norm2.weight: lr_multiplier: 1.0, wd_multiplier: 0.0
+I20251117 21:24:20 553248 dinov2 param_groups.py:77] model.blocks.3.norm2.bias: lr_multiplier: 1.0, wd_multiplier: 0.0
+I20251117 21:24:20 553248 dinov2 param_groups.py:77] model.blocks.3.mlp.fc1.weight: lr_multiplier: 1.0, wd_multiplier: 1.0
+I20251117 21:24:20 553248 dinov2 param_groups.py:77] model.blocks.3.mlp.fc1.bias: lr_multiplier: 1.0, wd_multiplier: 0.0
+I20251117 21:24:20 553248 dinov2 param_groups.py:77] model.blocks.3.mlp.fc2.weight: lr_multiplier: 1.0, wd_multiplier: 1.0
+I20251117 21:24:20 553248 dinov2 param_groups.py:77] model.blocks.3.mlp.fc2.bias: lr_multiplier: 1.0, wd_multiplier: 0.0
+I20251117 21:24:20 553248 dinov2 param_groups.py:77] model.blocks.3.ls2.gamma: lr_multiplier: 1.0, wd_multiplier: 0.0
+I20251117 21:24:20 553248 dinov2 param_groups.py:77] model.blocks.4.norm1.weight: lr_multiplier: 1.0, wd_multiplier: 0.0
+I20251117 21:24:20 553248 dinov2 param_groups.py:77] model.blocks.4.norm1.bias: lr_multiplier: 1.0, wd_multiplier: 0.0
+I20251117 21:24:20 553248 dinov2 param_groups.py:77] model.blocks.4.attn.qkv.weight: lr_multiplier: 1.0, wd_multiplier: 1.0
+I20251117 21:24:20 553248 dinov2 param_groups.py:77] model.blocks.4.attn.qkv.bias: lr_multiplier: 1.0, wd_multiplier: 0.0
+I20251117 21:24:20 553248 dinov2 param_groups.py:77] model.blocks.4.attn.proj.weight: lr_multiplier: 1.0, wd_multiplier: 1.0
+I20251117 21:24:20 553248 dinov2 param_groups.py:77] model.blocks.4.attn.proj.bias: lr_multiplier: 1.0, wd_multiplier: 0.0
+I20251117 21:24:20 553248 dinov2 param_groups.py:77] model.blocks.4.ls1.gamma: lr_multiplier: 1.0, wd_multiplier: 0.0
+I20251117 21:24:20 553248 dinov2 param_groups.py:77] model.blocks.4.norm2.weight: lr_multiplier: 1.0, wd_multiplier: 0.0
+I20251117 21:24:20 553248 dinov2 param_groups.py:77] model.blocks.4.norm2.bias: lr_multiplier: 1.0, wd_multiplier: 0.0
+I20251117 21:24:20 553248 dinov2 param_groups.py:77] model.blocks.4.mlp.fc1.weight: lr_multiplier: 1.0, wd_multiplier: 1.0
+I20251117 21:24:20 553248 dinov2 param_groups.py:77] model.blocks.4.mlp.fc1.bias: lr_multiplier: 1.0, wd_multiplier: 0.0
+I20251117 21:24:20 553248 dinov2 param_groups.py:77] model.blocks.4.mlp.fc2.weight: lr_multiplier: 1.0, wd_multiplier: 1.0
+I20251117 21:24:20 553248 dinov2 param_groups.py:77] model.blocks.4.mlp.fc2.bias: lr_multiplier: 1.0, wd_multiplier: 0.0
+I20251117 21:24:20 553248 dinov2 param_groups.py:77] model.blocks.4.ls2.gamma: lr_multiplier: 1.0, wd_multiplier: 0.0
+I20251117 21:24:20 553248 dinov2 param_groups.py:77] model.blocks.5.norm1.weight: lr_multiplier: 1.0, wd_multiplier: 0.0
+I20251117 21:24:20 553248 dinov2 param_groups.py:77] model.blocks.5.norm1.bias: lr_multiplier: 1.0, wd_multiplier: 0.0
+I20251117 21:24:20 553248 dinov2 param_groups.py:77] model.blocks.5.attn.qkv.weight: lr_multiplier: 1.0, wd_multiplier: 1.0
+I20251117 21:24:20 553248 dinov2 param_groups.py:77] model.blocks.5.attn.qkv.bias: lr_multiplier: 1.0, wd_multiplier: 0.0
+I20251117 21:24:20 553248 dinov2 param_groups.py:77] model.blocks.5.attn.proj.weight: lr_multiplier: 1.0, wd_multiplier: 1.0
+I20251117 21:24:20 553248 dinov2 param_groups.py:77] model.blocks.5.attn.proj.bias: lr_multiplier: 1.0, wd_multiplier: 0.0
+I20251117 21:24:20 553248 dinov2 param_groups.py:77] model.blocks.5.ls1.gamma: lr_multiplier: 1.0, wd_multiplier: 0.0
+I20251117 21:24:20 553248 dinov2 param_groups.py:77] model.blocks.5.norm2.weight: lr_multiplier: 1.0, wd_multiplier: 0.0
+I20251117 21:24:20 553248 dinov2 param_groups.py:77] model.blocks.5.norm2.bias: lr_multiplier: 1.0, wd_multiplier: 0.0
+I20251117 21:24:20 553248 dinov2 param_groups.py:77] model.blocks.5.mlp.fc1.weight: lr_multiplier: 1.0, wd_multiplier: 1.0
+I20251117 21:24:20 553248 dinov2 param_groups.py:77] model.blocks.5.mlp.fc1.bias: lr_multiplier: 1.0, wd_multiplier: 0.0
+I20251117 21:24:20 553248 dinov2 param_groups.py:77] model.blocks.5.mlp.fc2.weight: lr_multiplier: 1.0, wd_multiplier: 1.0
+I20251117 21:24:20 553248 dinov2 param_groups.py:77] model.blocks.5.mlp.fc2.bias: lr_multiplier: 1.0, wd_multiplier: 0.0
+I20251117 21:24:20 553248 dinov2 param_groups.py:77] model.blocks.5.ls2.gamma: lr_multiplier: 1.0, wd_multiplier: 0.0
+I20251117 21:24:20 553248 dinov2 param_groups.py:77] model.blocks.6.norm1.weight: lr_multiplier: 1.0, wd_multiplier: 0.0
+I20251117 21:24:20 553248 dinov2 param_groups.py:77] model.blocks.6.norm1.bias: lr_multiplier: 1.0, wd_multiplier: 0.0
+I20251117 21:24:20 553248 dinov2 param_groups.py:77] model.blocks.6.attn.qkv.weight: lr_multiplier: 1.0, wd_multiplier: 1.0
+I20251117 21:24:20 553248 dinov2 param_groups.py:77] model.blocks.6.attn.qkv.bias: lr_multiplier: 1.0, wd_multiplier: 0.0
+I20251117 21:24:20 553248 dinov2 param_groups.py:77] model.blocks.6.attn.proj.weight: lr_multiplier: 1.0, wd_multiplier: 1.0
+I20251117 21:24:20 553248 dinov2 param_groups.py:77] model.blocks.6.attn.proj.bias: lr_multiplier: 1.0, wd_multiplier: 0.0
+I20251117 21:24:20 553248 dinov2 param_groups.py:77] model.blocks.6.ls1.gamma: lr_multiplier: 1.0, wd_multiplier: 0.0
+I20251117 21:24:20 553248 dinov2 param_groups.py:77] model.blocks.6.norm2.weight: lr_multiplier: 1.0, wd_multiplier: 0.0
+I20251117 21:24:20 553248 dinov2 param_groups.py:77] model.blocks.6.norm2.bias: lr_multiplier: 1.0, wd_multiplier: 0.0
+I20251117 21:24:20 553248 dinov2 param_groups.py:77] model.blocks.6.mlp.fc1.weight: lr_multiplier: 1.0, wd_multiplier: 1.0
+I20251117 21:24:20 553248 dinov2 param_groups.py:77] model.blocks.6.mlp.fc1.bias: lr_multiplier: 1.0, wd_multiplier: 0.0
+I20251117 21:24:20 553248 dinov2 param_groups.py:77] model.blocks.6.mlp.fc2.weight: lr_multiplier: 1.0, wd_multiplier: 1.0
+I20251117 21:24:20 553248 dinov2 param_groups.py:77] model.blocks.6.mlp.fc2.bias: lr_multiplier: 1.0, wd_multiplier: 0.0
+I20251117 21:24:20 553248 dinov2 param_groups.py:77] model.blocks.6.ls2.gamma: lr_multiplier: 1.0, wd_multiplier: 0.0
+I20251117 21:24:20 553248 dinov2 param_groups.py:77] model.blocks.7.norm1.weight: lr_multiplier: 1.0, wd_multiplier: 0.0
+I20251117 21:24:20 553248 dinov2 param_groups.py:77] model.blocks.7.norm1.bias: lr_multiplier: 1.0, wd_multiplier: 0.0
+I20251117 21:24:20 553248 dinov2 param_groups.py:77] model.blocks.7.attn.qkv.weight: lr_multiplier: 1.0, wd_multiplier: 1.0
+I20251117 21:24:20 553248 dinov2 param_groups.py:77] model.blocks.7.attn.qkv.bias: lr_multiplier: 1.0, wd_multiplier: 0.0
+I20251117 21:24:20 553248 dinov2 param_groups.py:77] model.blocks.7.attn.proj.weight: lr_multiplier: 1.0, wd_multiplier: 1.0
+I20251117 21:24:20 553248 dinov2 param_groups.py:77] model.blocks.7.attn.proj.bias: lr_multiplier: 1.0, wd_multiplier: 0.0
+I20251117 21:24:20 553248 dinov2 param_groups.py:77] model.blocks.7.ls1.gamma: lr_multiplier: 1.0, wd_multiplier: 0.0
+I20251117 21:24:20 553248 dinov2 param_groups.py:77] model.blocks.7.norm2.weight: lr_multiplier: 1.0, wd_multiplier: 0.0
+I20251117 21:24:20 553248 dinov2 param_groups.py:77] model.blocks.7.norm2.bias: lr_multiplier: 1.0, wd_multiplier: 0.0
+I20251117 21:24:20 553248 dinov2 param_groups.py:77] model.blocks.7.mlp.fc1.weight: lr_multiplier: 1.0, wd_multiplier: 1.0
+I20251117 21:24:20 553248 dinov2 param_groups.py:77] model.blocks.7.mlp.fc1.bias: lr_multiplier: 1.0, wd_multiplier: 0.0
+I20251117 21:24:20 553248 dinov2 param_groups.py:77] model.blocks.7.mlp.fc2.weight: lr_multiplier: 1.0, wd_multiplier: 1.0
+I20251117 21:24:20 553248 dinov2 param_groups.py:77] model.blocks.7.mlp.fc2.bias: lr_multiplier: 1.0, wd_multiplier: 0.0
+I20251117 21:24:20 553248 dinov2 param_groups.py:77] model.blocks.7.ls2.gamma: lr_multiplier: 1.0, wd_multiplier: 0.0
+I20251117 21:24:20 553248 dinov2 param_groups.py:77] model.blocks.8.norm1.weight: lr_multiplier: 1.0, wd_multiplier: 0.0
+I20251117 21:24:20 553248 dinov2 param_groups.py:77] model.blocks.8.norm1.bias: lr_multiplier: 1.0, wd_multiplier: 0.0
+I20251117 21:24:20 553248 dinov2 param_groups.py:77] model.blocks.8.attn.qkv.weight: lr_multiplier: 1.0, wd_multiplier: 1.0
+I20251117 21:24:20 553248 dinov2 param_groups.py:77] model.blocks.8.attn.qkv.bias: lr_multiplier: 1.0, wd_multiplier: 0.0
+I20251117 21:24:20 553248 dinov2 param_groups.py:77] model.blocks.8.attn.proj.weight: lr_multiplier: 1.0, wd_multiplier: 1.0
+I20251117 21:24:20 553248 dinov2 param_groups.py:77] model.blocks.8.attn.proj.bias: lr_multiplier: 1.0, wd_multiplier: 0.0
+I20251117 21:24:20 553248 dinov2 param_groups.py:77] model.blocks.8.ls1.gamma: lr_multiplier: 1.0, wd_multiplier: 0.0
+I20251117 21:24:20 553248 dinov2 param_groups.py:77] model.blocks.8.norm2.weight: lr_multiplier: 1.0, wd_multiplier: 0.0
+I20251117 21:24:20 553248 dinov2 param_groups.py:77] model.blocks.8.norm2.bias: lr_multiplier: 1.0, wd_multiplier: 0.0
+I20251117 21:24:20 553248 dinov2 param_groups.py:77] model.blocks.8.mlp.fc1.weight: lr_multiplier: 1.0, wd_multiplier: 1.0
+I20251117 21:24:20 553248 dinov2 param_groups.py:77] model.blocks.8.mlp.fc1.bias: lr_multiplier: 1.0, wd_multiplier: 0.0
+I20251117 21:24:20 553248 dinov2 param_groups.py:77] model.blocks.8.mlp.fc2.weight: lr_multiplier: 1.0, wd_multiplier: 1.0
+I20251117 21:24:20 553248 dinov2 param_groups.py:77] model.blocks.8.mlp.fc2.bias: lr_multiplier: 1.0, wd_multiplier: 0.0
+I20251117 21:24:20 553248 dinov2 param_groups.py:77] model.blocks.8.ls2.gamma: lr_multiplier: 1.0, wd_multiplier: 0.0
+I20251117 21:24:20 553248 dinov2 param_groups.py:77] model.blocks.9.norm1.weight: lr_multiplier: 1.0, wd_multiplier: 0.0
+I20251117 21:24:20 553248 dinov2 param_groups.py:77] model.blocks.9.norm1.bias: lr_multiplier: 1.0, wd_multiplier: 0.0
+I20251117 21:24:20 553248 dinov2 param_groups.py:77] model.blocks.9.attn.qkv.weight: lr_multiplier: 1.0, wd_multiplier: 1.0
+I20251117 21:24:20 553248 dinov2 param_groups.py:77] model.blocks.9.attn.qkv.bias: lr_multiplier: 1.0, wd_multiplier: 0.0
+I20251117 21:24:20 553248 dinov2 param_groups.py:77] model.blocks.9.attn.proj.weight: lr_multiplier: 1.0, wd_multiplier: 1.0
+I20251117 21:24:20 553248 dinov2 param_groups.py:77] model.blocks.9.attn.proj.bias: lr_multiplier: 1.0, wd_multiplier: 0.0
+I20251117 21:24:20 553248 dinov2 param_groups.py:77] model.blocks.9.ls1.gamma: lr_multiplier: 1.0, wd_multiplier: 0.0
+I20251117 21:24:20 553248 dinov2 param_groups.py:77] model.blocks.9.norm2.weight: lr_multiplier: 1.0, wd_multiplier: 0.0
+I20251117 21:24:20 553248 dinov2 param_groups.py:77] model.blocks.9.norm2.bias: lr_multiplier: 1.0, wd_multiplier: 0.0
+I20251117 21:24:20 553248 dinov2 param_groups.py:77] model.blocks.9.mlp.fc1.weight: lr_multiplier: 1.0, wd_multiplier: 1.0
+I20251117 21:24:20 553248 dinov2 param_groups.py:77] model.blocks.9.mlp.fc1.bias: lr_multiplier: 1.0, wd_multiplier: 0.0
+I20251117 21:24:20 553248 dinov2 param_groups.py:77] model.blocks.9.mlp.fc2.weight: lr_multiplier: 1.0, wd_multiplier: 1.0
+I20251117 21:24:20 553248 dinov2 param_groups.py:77] model.blocks.9.mlp.fc2.bias: lr_multiplier: 1.0, wd_multiplier: 0.0
+I20251117 21:24:20 553248 dinov2 param_groups.py:77] model.blocks.9.ls2.gamma: lr_multiplier: 1.0, wd_multiplier: 0.0
+I20251117 21:24:20 553248 dinov2 param_groups.py:77] model.blocks.10.norm1.weight: lr_multiplier: 1.0, wd_multiplier: 0.0
+I20251117 21:24:20 553248 dinov2 param_groups.py:77] model.blocks.10.norm1.bias: lr_multiplier: 1.0, wd_multiplier: 0.0
+I20251117 21:24:20 553248 dinov2 param_groups.py:77] model.blocks.10.attn.qkv.weight: lr_multiplier: 1.0, wd_multiplier: 1.0
+I20251117 21:24:20 553248 dinov2 param_groups.py:77] model.blocks.10.attn.qkv.bias: lr_multiplier: 1.0, wd_multiplier: 0.0
+I20251117 21:24:20 553248 dinov2 param_groups.py:77] model.blocks.10.attn.proj.weight: lr_multiplier: 1.0, wd_multiplier: 1.0
+I20251117 21:24:20 553248 dinov2 param_groups.py:77] model.blocks.10.attn.proj.bias: lr_multiplier: 1.0, wd_multiplier: 0.0
+I20251117 21:24:20 553248 dinov2 param_groups.py:77] model.blocks.10.ls1.gamma: lr_multiplier: 1.0, wd_multiplier: 0.0
+I20251117 21:24:20 553248 dinov2 param_groups.py:77] model.blocks.10.norm2.weight: lr_multiplier: 1.0, wd_multiplier: 0.0
+I20251117 21:24:20 553248 dinov2 param_groups.py:77] model.blocks.10.norm2.bias: lr_multiplier: 1.0, wd_multiplier: 0.0
+I20251117 21:24:20 553248 dinov2 param_groups.py:77] model.blocks.10.mlp.fc1.weight: lr_multiplier: 1.0, wd_multiplier: 1.0
+I20251117 21:24:20 553248 dinov2 param_groups.py:77] model.blocks.10.mlp.fc1.bias: lr_multiplier: 1.0, wd_multiplier: 0.0
+I20251117 21:24:20 553248 dinov2 param_groups.py:77] model.blocks.10.mlp.fc2.weight: lr_multiplier: 1.0, wd_multiplier: 1.0
+I20251117 21:24:20 553248 dinov2 param_groups.py:77] model.blocks.10.mlp.fc2.bias: lr_multiplier: 1.0, wd_multiplier: 0.0
+I20251117 21:24:20 553248 dinov2 param_groups.py:77] model.blocks.10.ls2.gamma: lr_multiplier: 1.0, wd_multiplier: 0.0
+I20251117 21:24:20 553248 dinov2 param_groups.py:77] model.blocks.11.norm1.weight: lr_multiplier: 1.0, wd_multiplier: 0.0
+I20251117 21:24:20 553248 dinov2 param_groups.py:77] model.blocks.11.norm1.bias: lr_multiplier: 1.0, wd_multiplier: 0.0
+I20251117 21:24:20 553248 dinov2 param_groups.py:77] model.blocks.11.attn.qkv.weight: lr_multiplier: 1.0, wd_multiplier: 1.0
+I20251117 21:24:20 553248 dinov2 param_groups.py:77] model.blocks.11.attn.qkv.bias: lr_multiplier: 1.0, wd_multiplier: 0.0
+I20251117 21:24:20 553248 dinov2 param_groups.py:77] model.blocks.11.attn.proj.weight: lr_multiplier: 1.0, wd_multiplier: 1.0
+I20251117 21:24:20 553248 dinov2 param_groups.py:77] model.blocks.11.attn.proj.bias: lr_multiplier: 1.0, wd_multiplier: 0.0
+I20251117 21:24:20 553248 dinov2 param_groups.py:77] model.blocks.11.ls1.gamma: lr_multiplier: 1.0, wd_multiplier: 0.0
+I20251117 21:24:20 553248 dinov2 param_groups.py:77] model.blocks.11.norm2.weight: lr_multiplier: 1.0, wd_multiplier: 0.0
+I20251117 21:24:20 553248 dinov2 param_groups.py:77] model.blocks.11.norm2.bias: lr_multiplier: 1.0, wd_multiplier: 0.0
+I20251117 21:24:20 553248 dinov2 param_groups.py:77] model.blocks.11.mlp.fc1.weight: lr_multiplier: 1.0, wd_multiplier: 1.0
+I20251117 21:24:20 553248 dinov2 param_groups.py:77] model.blocks.11.mlp.fc1.bias: lr_multiplier: 1.0, wd_multiplier: 0.0
+I20251117 21:24:20 553248 dinov2 param_groups.py:77] model.blocks.11.mlp.fc2.weight: lr_multiplier: 1.0, wd_multiplier: 1.0
+I20251117 21:24:20 553248 dinov2 param_groups.py:77] model.blocks.11.mlp.fc2.bias: lr_multiplier: 1.0, wd_multiplier: 0.0
+I20251117 21:24:20 553248 dinov2 param_groups.py:77] model.blocks.11.ls2.gamma: lr_multiplier: 1.0, wd_multiplier: 0.0
+I20251117 21:24:20 553248 dinov2 param_groups.py:77] model.blocks.12.norm1.weight: lr_multiplier: 1.0, wd_multiplier: 0.0
+I20251117 21:24:20 553248 dinov2 param_groups.py:77] model.blocks.12.norm1.bias: lr_multiplier: 1.0, wd_multiplier: 0.0
+I20251117 21:24:20 553248 dinov2 param_groups.py:77] model.blocks.12.attn.qkv.weight: lr_multiplier: 1.0, wd_multiplier: 1.0
+I20251117 21:24:20 553248 dinov2 param_groups.py:77] model.blocks.12.attn.qkv.bias: lr_multiplier: 1.0, wd_multiplier: 0.0
+I20251117 21:24:20 553248 dinov2 param_groups.py:77] model.blocks.12.attn.proj.weight: lr_multiplier: 1.0, wd_multiplier: 1.0
+I20251117 21:24:20 553248 dinov2 param_groups.py:77] model.blocks.12.attn.proj.bias: lr_multiplier: 1.0, wd_multiplier: 0.0
+I20251117 21:24:20 553248 dinov2 param_groups.py:77] model.blocks.12.ls1.gamma: lr_multiplier: 1.0, wd_multiplier: 0.0
+I20251117 21:24:20 553248 dinov2 param_groups.py:77] model.blocks.12.norm2.weight: lr_multiplier: 1.0, wd_multiplier: 0.0
+I20251117 21:24:20 553248 dinov2 param_groups.py:77] model.blocks.12.norm2.bias: lr_multiplier: 1.0, wd_multiplier: 0.0
+I20251117 21:24:20 553248 dinov2 param_groups.py:77] model.blocks.12.mlp.fc1.weight: lr_multiplier: 1.0, wd_multiplier: 1.0
+I20251117 21:24:20 553248 dinov2 param_groups.py:77] model.blocks.12.mlp.fc1.bias: lr_multiplier: 1.0, wd_multiplier: 0.0
+I20251117 21:24:20 553248 dinov2 param_groups.py:77] model.blocks.12.mlp.fc2.weight: lr_multiplier: 1.0, wd_multiplier: 1.0
+I20251117 21:24:20 553248 dinov2 param_groups.py:77] model.blocks.12.mlp.fc2.bias: lr_multiplier: 1.0, wd_multiplier: 0.0
+I20251117 21:24:20 553248 dinov2 param_groups.py:77] model.blocks.12.ls2.gamma: lr_multiplier: 1.0, wd_multiplier: 0.0
+I20251117 21:24:20 553248 dinov2 param_groups.py:77] model.blocks.13.norm1.weight: lr_multiplier: 1.0, wd_multiplier: 0.0
+I20251117 21:24:20 553248 dinov2 param_groups.py:77] model.blocks.13.norm1.bias: lr_multiplier: 1.0, wd_multiplier: 0.0
+I20251117 21:24:20 553248 dinov2 param_groups.py:77] model.blocks.13.attn.qkv.weight: lr_multiplier: 1.0, wd_multiplier: 1.0
+I20251117 21:24:20 553248 dinov2 param_groups.py:77] model.blocks.13.attn.qkv.bias: lr_multiplier: 1.0, wd_multiplier: 0.0
+I20251117 21:24:20 553248 dinov2 param_groups.py:77] model.blocks.13.attn.proj.weight: lr_multiplier: 1.0, wd_multiplier: 1.0
+I20251117 21:24:20 553248 dinov2 param_groups.py:77] model.blocks.13.attn.proj.bias: lr_multiplier: 1.0, wd_multiplier: 0.0
+I20251117 21:24:20 553248 dinov2 param_groups.py:77] model.blocks.13.ls1.gamma: lr_multiplier: 1.0, wd_multiplier: 0.0
+I20251117 21:24:20 553248 dinov2 param_groups.py:77] model.blocks.13.norm2.weight: lr_multiplier: 1.0, wd_multiplier: 0.0
+I20251117 21:24:20 553248 dinov2 param_groups.py:77] model.blocks.13.norm2.bias: lr_multiplier: 1.0, wd_multiplier: 0.0
+I20251117 21:24:20 553248 dinov2 param_groups.py:77] model.blocks.13.mlp.fc1.weight: lr_multiplier: 1.0, wd_multiplier: 1.0
+I20251117 21:24:20 553248 dinov2 param_groups.py:77] model.blocks.13.mlp.fc1.bias: lr_multiplier: 1.0, wd_multiplier: 0.0
+I20251117 21:24:20 553248 dinov2 param_groups.py:77] model.blocks.13.mlp.fc2.weight: lr_multiplier: 1.0, wd_multiplier: 1.0
+I20251117 21:24:20 553248 dinov2 param_groups.py:77] model.blocks.13.mlp.fc2.bias: lr_multiplier: 1.0, wd_multiplier: 0.0
+I20251117 21:24:20 553248 dinov2 param_groups.py:77] model.blocks.13.ls2.gamma: lr_multiplier: 1.0, wd_multiplier: 0.0
+I20251117 21:24:20 553248 dinov2 param_groups.py:77] model.blocks.14.norm1.weight: lr_multiplier: 1.0, wd_multiplier: 0.0
+I20251117 21:24:20 553248 dinov2 param_groups.py:77] model.blocks.14.norm1.bias: lr_multiplier: 1.0, wd_multiplier: 0.0
+I20251117 21:24:20 553248 dinov2 param_groups.py:77] model.blocks.14.attn.qkv.weight: lr_multiplier: 1.0, wd_multiplier: 1.0
+I20251117 21:24:20 553248 dinov2 param_groups.py:77] model.blocks.14.attn.qkv.bias: lr_multiplier: 1.0, wd_multiplier: 0.0
+I20251117 21:24:20 553248 dinov2 param_groups.py:77] model.blocks.14.attn.proj.weight: lr_multiplier: 1.0, wd_multiplier: 1.0
+I20251117 21:24:20 553248 dinov2 param_groups.py:77] model.blocks.14.attn.proj.bias: lr_multiplier: 1.0, wd_multiplier: 0.0
+I20251117 21:24:20 553248 dinov2 param_groups.py:77] model.blocks.14.ls1.gamma: lr_multiplier: 1.0, wd_multiplier: 0.0
+I20251117 21:24:20 553248 dinov2 param_groups.py:77] model.blocks.14.norm2.weight: lr_multiplier: 1.0, wd_multiplier: 0.0
+I20251117 21:24:20 553248 dinov2 param_groups.py:77] model.blocks.14.norm2.bias: lr_multiplier: 1.0, wd_multiplier: 0.0
+I20251117 21:24:20 553248 dinov2 param_groups.py:77] model.blocks.14.mlp.fc1.weight: lr_multiplier: 1.0, wd_multiplier: 1.0
+I20251117 21:24:20 553248 dinov2 param_groups.py:77] model.blocks.14.mlp.fc1.bias: lr_multiplier: 1.0, wd_multiplier: 0.0
+I20251117 21:24:20 553248 dinov2 param_groups.py:77] model.blocks.14.mlp.fc2.weight: lr_multiplier: 1.0, wd_multiplier: 1.0
+I20251117 21:24:20 553248 dinov2 param_groups.py:77] model.blocks.14.mlp.fc2.bias: lr_multiplier: 1.0, wd_multiplier: 0.0
+I20251117 21:24:20 553248 dinov2 param_groups.py:77] model.blocks.14.ls2.gamma: lr_multiplier: 1.0, wd_multiplier: 0.0
+I20251117 21:24:20 553248 dinov2 param_groups.py:77] model.blocks.15.norm1.weight: lr_multiplier: 1.0, wd_multiplier: 0.0
+I20251117 21:24:20 553248 dinov2 param_groups.py:77] model.blocks.15.norm1.bias: lr_multiplier: 1.0, wd_multiplier: 0.0
+I20251117 21:24:20 553248 dinov2 param_groups.py:77] model.blocks.15.attn.qkv.weight: lr_multiplier: 1.0, wd_multiplier: 1.0
+I20251117 21:24:20 553248 dinov2 param_groups.py:77] model.blocks.15.attn.qkv.bias: lr_multiplier: 1.0, wd_multiplier: 0.0
+I20251117 21:24:20 553248 dinov2 param_groups.py:77] model.blocks.15.attn.proj.weight: lr_multiplier: 1.0, wd_multiplier: 1.0
+I20251117 21:24:20 553248 dinov2 param_groups.py:77] model.blocks.15.attn.proj.bias: lr_multiplier: 1.0, wd_multiplier: 0.0
+I20251117 21:24:20 553248 dinov2 param_groups.py:77] model.blocks.15.ls1.gamma: lr_multiplier: 1.0, wd_multiplier: 0.0
+I20251117 21:24:20 553248 dinov2 param_groups.py:77] model.blocks.15.norm2.weight: lr_multiplier: 1.0, wd_multiplier: 0.0
+I20251117 21:24:20 553248 dinov2 param_groups.py:77] model.blocks.15.norm2.bias: lr_multiplier: 1.0, wd_multiplier: 0.0
+I20251117 21:24:20 553248 dinov2 param_groups.py:77] model.blocks.15.mlp.fc1.weight: lr_multiplier: 1.0, wd_multiplier: 1.0
+I20251117 21:24:20 553248 dinov2 param_groups.py:77] model.blocks.15.mlp.fc1.bias: lr_multiplier: 1.0, wd_multiplier: 0.0
+I20251117 21:24:20 553248 dinov2 param_groups.py:77] model.blocks.15.mlp.fc2.weight: lr_multiplier: 1.0, wd_multiplier: 1.0
+I20251117 21:24:20 553248 dinov2 param_groups.py:77] model.blocks.15.mlp.fc2.bias: lr_multiplier: 1.0, wd_multiplier: 0.0
+I20251117 21:24:20 553248 dinov2 param_groups.py:77] model.blocks.15.ls2.gamma: lr_multiplier: 1.0, wd_multiplier: 0.0
+I20251117 21:24:20 553248 dinov2 param_groups.py:77] model.blocks.16.norm1.weight: lr_multiplier: 1.0, wd_multiplier: 0.0
+I20251117 21:24:20 553248 dinov2 param_groups.py:77] model.blocks.16.norm1.bias: lr_multiplier: 1.0, wd_multiplier: 0.0
+I20251117 21:24:20 553248 dinov2 param_groups.py:77] model.blocks.16.attn.qkv.weight: lr_multiplier: 1.0, wd_multiplier: 1.0
+I20251117 21:24:20 553248 dinov2 param_groups.py:77] model.blocks.16.attn.qkv.bias: lr_multiplier: 1.0, wd_multiplier: 0.0
+I20251117 21:24:20 553248 dinov2 param_groups.py:77] model.blocks.16.attn.proj.weight: lr_multiplier: 1.0, wd_multiplier: 1.0
+I20251117 21:24:20 553248 dinov2 param_groups.py:77] model.blocks.16.attn.proj.bias: lr_multiplier: 1.0, wd_multiplier: 0.0
+I20251117 21:24:20 553248 dinov2 param_groups.py:77] model.blocks.16.ls1.gamma: lr_multiplier: 1.0, wd_multiplier: 0.0
+I20251117 21:24:20 553248 dinov2 param_groups.py:77] model.blocks.16.norm2.weight: lr_multiplier: 1.0, wd_multiplier: 0.0
+I20251117 21:24:20 553248 dinov2 param_groups.py:77] model.blocks.16.norm2.bias: lr_multiplier: 1.0, wd_multiplier: 0.0
+I20251117 21:24:20 553248 dinov2 param_groups.py:77] model.blocks.16.mlp.fc1.weight: lr_multiplier: 1.0, wd_multiplier: 1.0
+I20251117 21:24:20 553248 dinov2 param_groups.py:77] model.blocks.16.mlp.fc1.bias: lr_multiplier: 1.0, wd_multiplier: 0.0
+I20251117 21:24:20 553248 dinov2 param_groups.py:77] model.blocks.16.mlp.fc2.weight: lr_multiplier: 1.0, wd_multiplier: 1.0
+I20251117 21:24:20 553248 dinov2 param_groups.py:77] model.blocks.16.mlp.fc2.bias: lr_multiplier: 1.0, wd_multiplier: 0.0
+I20251117 21:24:20 553248 dinov2 param_groups.py:77] model.blocks.16.ls2.gamma: lr_multiplier: 1.0, wd_multiplier: 0.0
+I20251117 21:24:20 553248 dinov2 param_groups.py:77] model.blocks.17.norm1.weight: lr_multiplier: 1.0, wd_multiplier: 0.0
+I20251117 21:24:20 553248 dinov2 param_groups.py:77] model.blocks.17.norm1.bias: lr_multiplier: 1.0, wd_multiplier: 0.0
+I20251117 21:24:20 553248 dinov2 param_groups.py:77] model.blocks.17.attn.qkv.weight: lr_multiplier: 1.0, wd_multiplier: 1.0
+I20251117 21:24:20 553248 dinov2 param_groups.py:77] model.blocks.17.attn.qkv.bias: lr_multiplier: 1.0, wd_multiplier: 0.0
+I20251117 21:24:20 553248 dinov2 param_groups.py:77] model.blocks.17.attn.proj.weight: lr_multiplier: 1.0, wd_multiplier: 1.0
+I20251117 21:24:20 553248 dinov2 param_groups.py:77] model.blocks.17.attn.proj.bias: lr_multiplier: 1.0, wd_multiplier: 0.0
+I20251117 21:24:20 553248 dinov2 param_groups.py:77] model.blocks.17.ls1.gamma: lr_multiplier: 1.0, wd_multiplier: 0.0
+I20251117 21:24:20 553248 dinov2 param_groups.py:77] model.blocks.17.norm2.weight: lr_multiplier: 1.0, wd_multiplier: 0.0
+I20251117 21:24:20 553248 dinov2 param_groups.py:77] model.blocks.17.norm2.bias: lr_multiplier: 1.0, wd_multiplier: 0.0
+I20251117 21:24:20 553248 dinov2 param_groups.py:77] model.blocks.17.mlp.fc1.weight: lr_multiplier: 1.0, wd_multiplier: 1.0
+I20251117 21:24:20 553248 dinov2 param_groups.py:77] model.blocks.17.mlp.fc1.bias: lr_multiplier: 1.0, wd_multiplier: 0.0
+I20251117 21:24:20 553248 dinov2 param_groups.py:77] model.blocks.17.mlp.fc2.weight: lr_multiplier: 1.0, wd_multiplier: 1.0
+I20251117 21:24:20 553248 dinov2 param_groups.py:77] model.blocks.17.mlp.fc2.bias: lr_multiplier: 1.0, wd_multiplier: 0.0
+I20251117 21:24:20 553248 dinov2 param_groups.py:77] model.blocks.17.ls2.gamma: lr_multiplier: 1.0, wd_multiplier: 0.0
+I20251117 21:24:20 553248 dinov2 param_groups.py:77] model.blocks.18.norm1.weight: lr_multiplier: 1.0, wd_multiplier: 0.0
+I20251117 21:24:20 553248 dinov2 param_groups.py:77] model.blocks.18.norm1.bias: lr_multiplier: 1.0, wd_multiplier: 0.0
+I20251117 21:24:20 553248 dinov2 param_groups.py:77] model.blocks.18.attn.qkv.weight: lr_multiplier: 1.0, wd_multiplier: 1.0
+I20251117 21:24:20 553248 dinov2 param_groups.py:77] model.blocks.18.attn.qkv.bias: lr_multiplier: 1.0, wd_multiplier: 0.0
+I20251117 21:24:20 553248 dinov2 param_groups.py:77] model.blocks.18.attn.proj.weight: lr_multiplier: 1.0, wd_multiplier: 1.0
+I20251117 21:24:20 553248 dinov2 param_groups.py:77] model.blocks.18.attn.proj.bias: lr_multiplier: 1.0, wd_multiplier: 0.0
+I20251117 21:24:20 553248 dinov2 param_groups.py:77] model.blocks.18.ls1.gamma: lr_multiplier: 1.0, wd_multiplier: 0.0
+I20251117 21:24:20 553248 dinov2 param_groups.py:77] model.blocks.18.norm2.weight: lr_multiplier: 1.0, wd_multiplier: 0.0
+I20251117 21:24:20 553248 dinov2 param_groups.py:77] model.blocks.18.norm2.bias: lr_multiplier: 1.0, wd_multiplier: 0.0
+I20251117 21:24:20 553248 dinov2 param_groups.py:77] model.blocks.18.mlp.fc1.weight: lr_multiplier: 1.0, wd_multiplier: 1.0
+I20251117 21:24:20 553248 dinov2 param_groups.py:77] model.blocks.18.mlp.fc1.bias: lr_multiplier: 1.0, wd_multiplier: 0.0
+I20251117 21:24:20 553248 dinov2 param_groups.py:77] model.blocks.18.mlp.fc2.weight: lr_multiplier: 1.0, wd_multiplier: 1.0
+I20251117 21:24:20 553248 dinov2 param_groups.py:77] model.blocks.18.mlp.fc2.bias: lr_multiplier: 1.0, wd_multiplier: 0.0
+I20251117 21:24:20 553248 dinov2 param_groups.py:77] model.blocks.18.ls2.gamma: lr_multiplier: 1.0, wd_multiplier: 0.0
+I20251117 21:24:20 553248 dinov2 param_groups.py:77] model.blocks.19.norm1.weight: lr_multiplier: 1.0, wd_multiplier: 0.0
+I20251117 21:24:20 553248 dinov2 param_groups.py:77] model.blocks.19.norm1.bias: lr_multiplier: 1.0, wd_multiplier: 0.0
+I20251117 21:24:20 553248 dinov2 param_groups.py:77] model.blocks.19.attn.qkv.weight: lr_multiplier: 1.0, wd_multiplier: 1.0
+I20251117 21:24:20 553248 dinov2 param_groups.py:77] model.blocks.19.attn.qkv.bias: lr_multiplier: 1.0, wd_multiplier: 0.0
+I20251117 21:24:20 553248 dinov2 param_groups.py:77] model.blocks.19.attn.proj.weight: lr_multiplier: 1.0, wd_multiplier: 1.0
+I20251117 21:24:20 553248 dinov2 param_groups.py:77] model.blocks.19.attn.proj.bias: lr_multiplier: 1.0, wd_multiplier: 0.0
+I20251117 21:24:20 553248 dinov2 param_groups.py:77] model.blocks.19.ls1.gamma: lr_multiplier: 1.0, wd_multiplier: 0.0
+I20251117 21:24:20 553248 dinov2 param_groups.py:77] model.blocks.19.norm2.weight: lr_multiplier: 1.0, wd_multiplier: 0.0
+I20251117 21:24:20 553248 dinov2 param_groups.py:77] model.blocks.19.norm2.bias: lr_multiplier: 1.0, wd_multiplier: 0.0
+I20251117 21:24:20 553248 dinov2 param_groups.py:77] model.blocks.19.mlp.fc1.weight: lr_multiplier: 1.0, wd_multiplier: 1.0
+I20251117 21:24:20 553248 dinov2 param_groups.py:77] model.blocks.19.mlp.fc1.bias: lr_multiplier: 1.0, wd_multiplier: 0.0
+I20251117 21:24:20 553248 dinov2 param_groups.py:77] model.blocks.19.mlp.fc2.weight: lr_multiplier: 1.0, wd_multiplier: 1.0
+I20251117 21:24:20 553248 dinov2 param_groups.py:77] model.blocks.19.mlp.fc2.bias: lr_multiplier: 1.0, wd_multiplier: 0.0
+I20251117 21:24:20 553248 dinov2 param_groups.py:77] model.blocks.19.ls2.gamma: lr_multiplier: 1.0, wd_multiplier: 0.0
+I20251117 21:24:20 553248 dinov2 param_groups.py:77] model.blocks.20.norm1.weight: lr_multiplier: 1.0, wd_multiplier: 0.0
+I20251117 21:24:20 553248 dinov2 param_groups.py:77] model.blocks.20.norm1.bias: lr_multiplier: 1.0, wd_multiplier: 0.0
+I20251117 21:24:20 553248 dinov2 param_groups.py:77] model.blocks.20.attn.qkv.weight: lr_multiplier: 1.0, wd_multiplier: 1.0
+I20251117 21:24:20 553248 dinov2 param_groups.py:77] model.blocks.20.attn.qkv.bias: lr_multiplier: 1.0, wd_multiplier: 0.0
+I20251117 21:24:20 553248 dinov2 param_groups.py:77] model.blocks.20.attn.proj.weight: lr_multiplier: 1.0, wd_multiplier: 1.0
+I20251117 21:24:20 553248 dinov2 param_groups.py:77] model.blocks.20.attn.proj.bias: lr_multiplier: 1.0, wd_multiplier: 0.0
+I20251117 21:24:20 553248 dinov2 param_groups.py:77] model.blocks.20.ls1.gamma: lr_multiplier: 1.0, wd_multiplier: 0.0
+I20251117 21:24:20 553248 dinov2 param_groups.py:77] model.blocks.20.norm2.weight: lr_multiplier: 1.0, wd_multiplier: 0.0
+I20251117 21:24:20 553248 dinov2 param_groups.py:77] model.blocks.20.norm2.bias: lr_multiplier: 1.0, wd_multiplier: 0.0
+I20251117 21:24:20 553248 dinov2 param_groups.py:77] model.blocks.20.mlp.fc1.weight: lr_multiplier: 1.0, wd_multiplier: 1.0
+I20251117 21:24:20 553248 dinov2 param_groups.py:77] model.blocks.20.mlp.fc1.bias: lr_multiplier: 1.0, wd_multiplier: 0.0
+I20251117 21:24:20 553248 dinov2 param_groups.py:77] model.blocks.20.mlp.fc2.weight: lr_multiplier: 1.0, wd_multiplier: 1.0
+I20251117 21:24:20 553248 dinov2 param_groups.py:77] model.blocks.20.mlp.fc2.bias: lr_multiplier: 1.0, wd_multiplier: 0.0
+I20251117 21:24:20 553248 dinov2 param_groups.py:77] model.blocks.20.ls2.gamma: lr_multiplier: 1.0, wd_multiplier: 0.0
+I20251117 21:24:20 553248 dinov2 param_groups.py:77] model.blocks.21.norm1.weight: lr_multiplier: 1.0, wd_multiplier: 0.0
+I20251117 21:24:20 553248 dinov2 param_groups.py:77] model.blocks.21.norm1.bias: lr_multiplier: 1.0, wd_multiplier: 0.0
+I20251117 21:24:20 553248 dinov2 param_groups.py:77] model.blocks.21.attn.qkv.weight: lr_multiplier: 1.0, wd_multiplier: 1.0
+I20251117 21:24:20 553248 dinov2 param_groups.py:77] model.blocks.21.attn.qkv.bias: lr_multiplier: 1.0, wd_multiplier: 0.0
+I20251117 21:24:20 553248 dinov2 param_groups.py:77] model.blocks.21.attn.proj.weight: lr_multiplier: 1.0, wd_multiplier: 1.0
+I20251117 21:24:20 553248 dinov2 param_groups.py:77] model.blocks.21.attn.proj.bias: lr_multiplier: 1.0, wd_multiplier: 0.0
+I20251117 21:24:20 553248 dinov2 param_groups.py:77] model.blocks.21.ls1.gamma: lr_multiplier: 1.0, wd_multiplier: 0.0
+I20251117 21:24:20 553248 dinov2 param_groups.py:77] model.blocks.21.norm2.weight: lr_multiplier: 1.0, wd_multiplier: 0.0
+I20251117 21:24:20 553248 dinov2 param_groups.py:77] model.blocks.21.norm2.bias: lr_multiplier: 1.0, wd_multiplier: 0.0
+I20251117 21:24:20 553248 dinov2 param_groups.py:77] model.blocks.21.mlp.fc1.weight: lr_multiplier: 1.0, wd_multiplier: 1.0
+I20251117 21:24:20 553248 dinov2 param_groups.py:77] model.blocks.21.mlp.fc1.bias: lr_multiplier: 1.0, wd_multiplier: 0.0
+I20251117 21:24:20 553248 dinov2 param_groups.py:77] model.blocks.21.mlp.fc2.weight: lr_multiplier: 1.0, wd_multiplier: 1.0
+I20251117 21:24:20 553248 dinov2 param_groups.py:77] model.blocks.21.mlp.fc2.bias: lr_multiplier: 1.0, wd_multiplier: 0.0
+I20251117 21:24:20 553248 dinov2 param_groups.py:77] model.blocks.21.ls2.gamma: lr_multiplier: 1.0, wd_multiplier: 0.0
+I20251117 21:24:20 553248 dinov2 param_groups.py:77] model.blocks.22.norm1.weight: lr_multiplier: 1.0, wd_multiplier: 0.0
+I20251117 21:24:20 553248 dinov2 param_groups.py:77] model.blocks.22.norm1.bias: lr_multiplier: 1.0, wd_multiplier: 0.0
+I20251117 21:24:20 553248 dinov2 param_groups.py:77] model.blocks.22.attn.qkv.weight: lr_multiplier: 1.0, wd_multiplier: 1.0
+I20251117 21:24:20 553248 dinov2 param_groups.py:77] model.blocks.22.attn.qkv.bias: lr_multiplier: 1.0, wd_multiplier: 0.0
+I20251117 21:24:20 553248 dinov2 param_groups.py:77] model.blocks.22.attn.proj.weight: lr_multiplier: 1.0, wd_multiplier: 1.0
+I20251117 21:24:20 553248 dinov2 param_groups.py:77] model.blocks.22.attn.proj.bias: lr_multiplier: 1.0, wd_multiplier: 0.0
+I20251117 21:24:20 553248 dinov2 param_groups.py:77] model.blocks.22.ls1.gamma: lr_multiplier: 1.0, wd_multiplier: 0.0
+I20251117 21:24:20 553248 dinov2 param_groups.py:77] model.blocks.22.norm2.weight: lr_multiplier: 1.0, wd_multiplier: 0.0
+I20251117 21:24:20 553248 dinov2 param_groups.py:77] model.blocks.22.norm2.bias: lr_multiplier: 1.0, wd_multiplier: 0.0
+I20251117 21:24:20 553248 dinov2 param_groups.py:77] model.blocks.22.mlp.fc1.weight: lr_multiplier: 1.0, wd_multiplier: 1.0
+I20251117 21:24:20 553248 dinov2 param_groups.py:77] model.blocks.22.mlp.fc1.bias: lr_multiplier: 1.0, wd_multiplier: 0.0
+I20251117 21:24:20 553248 dinov2 param_groups.py:77] model.blocks.22.mlp.fc2.weight: lr_multiplier: 1.0, wd_multiplier: 1.0
+I20251117 21:24:20 553248 dinov2 param_groups.py:77] model.blocks.22.mlp.fc2.bias: lr_multiplier: 1.0, wd_multiplier: 0.0
+I20251117 21:24:20 553248 dinov2 param_groups.py:77] model.blocks.22.ls2.gamma: lr_multiplier: 1.0, wd_multiplier: 0.0
+I20251117 21:24:20 553248 dinov2 param_groups.py:77] model.blocks.23.norm1.weight: lr_multiplier: 1.0, wd_multiplier: 0.0
+I20251117 21:24:20 553248 dinov2 param_groups.py:77] model.blocks.23.norm1.bias: lr_multiplier: 1.0, wd_multiplier: 0.0
+I20251117 21:24:20 553248 dinov2 param_groups.py:77] model.blocks.23.attn.qkv.weight: lr_multiplier: 1.0, wd_multiplier: 1.0
+I20251117 21:24:20 553248 dinov2 param_groups.py:77] model.blocks.23.attn.qkv.bias: lr_multiplier: 1.0, wd_multiplier: 0.0
+I20251117 21:24:20 553248 dinov2 param_groups.py:77] model.blocks.23.attn.proj.weight: lr_multiplier: 1.0, wd_multiplier: 1.0
+I20251117 21:24:20 553248 dinov2 param_groups.py:77] model.blocks.23.attn.proj.bias: lr_multiplier: 1.0, wd_multiplier: 0.0
+I20251117 21:24:20 553248 dinov2 param_groups.py:77] model.blocks.23.ls1.gamma: lr_multiplier: 1.0, wd_multiplier: 0.0
+I20251117 21:24:20 553248 dinov2 param_groups.py:77] model.blocks.23.norm2.weight: lr_multiplier: 1.0, wd_multiplier: 0.0
+I20251117 21:24:20 553248 dinov2 param_groups.py:77] model.blocks.23.norm2.bias: lr_multiplier: 1.0, wd_multiplier: 0.0
+I20251117 21:24:20 553248 dinov2 param_groups.py:77] model.blocks.23.mlp.fc1.weight: lr_multiplier: 1.0, wd_multiplier: 1.0
+I20251117 21:24:20 553248 dinov2 param_groups.py:77] model.blocks.23.mlp.fc1.bias: lr_multiplier: 1.0, wd_multiplier: 0.0
+I20251117 21:24:20 553248 dinov2 param_groups.py:77] model.blocks.23.mlp.fc2.weight: lr_multiplier: 1.0, wd_multiplier: 1.0
+I20251117 21:24:20 553248 dinov2 param_groups.py:77] model.blocks.23.mlp.fc2.bias: lr_multiplier: 1.0, wd_multiplier: 0.0
+I20251117 21:24:20 553248 dinov2 param_groups.py:77] model.blocks.23.ls2.gamma: lr_multiplier: 1.0, wd_multiplier: 0.0
+I20251117 21:24:20 553248 dinov2 param_groups.py:77] model.norm.weight: lr_multiplier: 1.0, wd_multiplier: 0.0
+I20251117 21:24:20 553248 dinov2 param_groups.py:77] model.norm.bias: lr_multiplier: 1.0, wd_multiplier: 0.0
+I20251117 21:24:20 553248 dinov2 ssl_meta_arch.py:678] fusing param groups
+I20251117 21:24:20 553248 dinov2 param_groups.py:54] else code branch
+I20251117 21:24:20 553248 dinov2 param_groups.py:77] mlp.0.weight: lr_multiplier: 1.0, wd_multiplier: 1.0
+I20251117 21:24:20 553248 dinov2 param_groups.py:77] mlp.0.bias: lr_multiplier: 1.0, wd_multiplier: 0.0
+I20251117 21:24:20 553248 dinov2 param_groups.py:77] mlp.2.weight: lr_multiplier: 1.0, wd_multiplier: 1.0
+I20251117 21:24:20 553248 dinov2 param_groups.py:77] mlp.2.bias: lr_multiplier: 1.0, wd_multiplier: 0.0
+I20251117 21:24:20 553248 dinov2 param_groups.py:77] mlp.4.weight: lr_multiplier: 1.0, wd_multiplier: 1.0
+I20251117 21:24:20 553248 dinov2 param_groups.py:77] mlp.4.bias: lr_multiplier: 1.0, wd_multiplier: 0.0
+I20251117 21:24:20 553248 dinov2 param_groups.py:77] last_layer.weight_g: lr_multiplier: 1.0, wd_multiplier: 1.0
+I20251117 21:24:20 553248 dinov2 param_groups.py:77] last_layer.weight_v: lr_multiplier: 1.0, wd_multiplier: 1.0
+I20251117 21:24:20 553248 dinov2 ssl_meta_arch.py:678] fusing param groups
+I20251117 21:24:20 553248 dinov2 param_groups.py:54] else code branch
+I20251117 21:24:20 553248 dinov2 param_groups.py:77] mlp.0.weight: lr_multiplier: 1.0, wd_multiplier: 1.0
+I20251117 21:24:20 553248 dinov2 param_groups.py:77] mlp.0.bias: lr_multiplier: 1.0, wd_multiplier: 0.0
+I20251117 21:24:20 553248 dinov2 param_groups.py:77] mlp.2.weight: lr_multiplier: 1.0, wd_multiplier: 1.0
+I20251117 21:24:20 553248 dinov2 param_groups.py:77] mlp.2.bias: lr_multiplier: 1.0, wd_multiplier: 0.0
+I20251117 21:24:20 553248 dinov2 param_groups.py:77] mlp.4.weight: lr_multiplier: 1.0, wd_multiplier: 1.0
+I20251117 21:24:20 553248 dinov2 param_groups.py:77] mlp.4.bias: lr_multiplier: 1.0, wd_multiplier: 0.0
+I20251117 21:24:20 553248 dinov2 param_groups.py:77] last_layer.weight_g: lr_multiplier: 1.0, wd_multiplier: 1.0
+I20251117 21:24:20 553248 dinov2 param_groups.py:77] last_layer.weight_v: lr_multiplier: 1.0, wd_multiplier: 1.0
+I20251117 21:24:20 553248 dinov2 ssl_meta_arch.py:678] fusing param groups
+I20251117 21:24:20 553248 dinov2 train.py:113] Schedulers ready.
+I20251117 21:24:20 553248 fvcore.common.checkpoint checkpoint.py:148] No checkpoint found. Initializing model from scratch
+I20251117 21:24:20 553248 dinov2 augmentations.py:36] ###################################
+I20251117 21:24:20 553248 dinov2 augmentations.py:37] Using data augmentation parameters:
+I20251117 21:24:20 553248 dinov2 augmentations.py:38] global_crops_scale: [0.32, 1.0]
+I20251117 21:24:20 553248 dinov2 augmentations.py:39] local_crops_scale: [0.05, 0.32]
+I20251117 21:24:20 553248 dinov2 augmentations.py:40] local_crops_number: 8
+I20251117 21:24:20 553248 dinov2 augmentations.py:41] global_crops_size: 224
+I20251117 21:24:20 553248 dinov2 augmentations.py:42] local_crops_size: 96
+I20251117 21:24:20 553248 dinov2 augmentations.py:43] ###################################
+I20251117 21:24:20 553248 dinov2 loaders.py:94] using dataset: "Pathology:split=TRAIN:root=/data/tanyuyi/code/dinov3-frozen-path/dataset/pathology-all-224/:extra=/data/tanyuyi/code/dinov3-frozen-path/dataset/pathology-all-224/:sshid=13"
+I20251117 21:24:20 553248 dinov2 loaders.py:99] # of dataset samples: 127,608,137
+I20251117 21:24:20 553248 dinov2 loaders.py:132] sampler: sharded infinite
+I20251117 21:24:20 553248 dinov2 loaders.py:216] using PyTorch data loader
+I20251117 21:24:20 553248 dinov2 loaders.py:234] infinite data loader
+I20251117 21:24:23 553248 dinov2 train.py:249] Starting training from iteration 0
+W20251117 21:24:27 553248 py.warnings warnings.py:109] /data/tanyuyi/code/dinov2-frozen-path/dinov2/data/samplers.py:132: UserWarning: # of dropped samples: 1
+  warnings.warn(f"# of dropped samples: {drop_count}")
+
+I20251117 21:29:56 553248 dinov2 helpers.py:102] Training  [     0/145000]  eta: 558 days, 2:41:56  lr: 0.0000 (0.0000)  wd: 0.0400 (0.0400)  mom: 0.9920 (0.9920)  last_layer_lr: 0.0000 (0.0000)  current_batch_size: 32.0000 (32.0000)  total_loss: 13.7052 (13.7052)  dino_local_crops_loss: 9.8362 (9.8362)  dino_global_crops_loss: 1.2159 (1.2159)  koleo_loss: -0.0078 (-0.0078)  ibot_loss: 2.6531 (2.6531)  time: 332.558044  data: 322.752655  max mem: 22727
+I20251117 21:30:12 553248 dinov2 helpers.py:102] Training  [    10/145000]  eta: 53 days, 6:59:30  lr: 0.0000 (0.0000)  wd: 0.0400 (0.0400)  mom: 0.9920 (0.9920)  last_layer_lr: 0.0000 (0.0000)  current_batch_size: 32.0000 (32.0000)  total_loss: 13.6928 (13.6950)  dino_local_crops_loss: 9.8251 (9.8281)  dino_global_crops_loss: 1.2155 (1.2147)  koleo_loss: -0.0069 (-0.0068)  ibot_loss: 2.6523 (2.6522)  time: 31.756470  data: 29.341311  max mem: 24072
+I20251117 21:30:29 553248 dinov2 helpers.py:102] Training  [    20/145000]  eta: 29 days, 6:04:29  lr: 0.0000 (0.0000)  wd: 0.0400 (0.0400)  mom: 0.9920 (0.9920)  last_layer_lr: 0.0000 (0.0000)  current_batch_size: 32.0000 (32.0000)  total_loss: 13.6950 (13.6964)  dino_local_crops_loss: 9.8279 (9.8294)  dino_global_crops_loss: 1.2155 (1.2150)  koleo_loss: -0.0076 (-0.0072)  ibot_loss: 2.6518 (2.6520)  time: 1.676985  data: 0.000178  max mem: 24072
+I20251117 21:30:46 553248 dinov2 helpers.py:102] Training  [    30/145000]  eta: 20 days, 17:22:50  lr: 0.0000 (0.0000)  wd: 0.0400 (0.0400)  mom: 0.9920 (0.9920)  last_layer_lr: 0.0000 (0.0000)  current_batch_size: 32.0000 (32.0000)  total_loss: 13.6990 (13.6965)  dino_local_crops_loss: 9.8316 (9.8294)  dino_global_crops_loss: 1.2151 (1.2150)  koleo_loss: -0.0072 (-0.0070)  ibot_loss: 2.6518 (2.6521)  time: 1.678481  data: 0.000269  max mem: 24072
+I20251117 21:31:03 553248 dinov2 helpers.py:102] Training  [    40/145000]  eta: 16 days, 8:52:12  lr: 0.0000 (0.0000)  wd: 0.0400 (0.0400)  mom: 0.9920 (0.9920)  last_layer_lr: 0.0000 (0.0000)  current_batch_size: 32.0000 (32.0000)  total_loss: 13.6888 (13.6946)  dino_local_crops_loss: 9.8232 (9.8275)  dino_global_crops_loss: 1.2149 (1.2149)  koleo_loss: -0.0068 (-0.0069)  ibot_loss: 2.6524 (2.6521)  time: 1.696373  data: 0.000288  max mem: 24072
+I20251117 21:31:20 553248 dinov2 helpers.py:102] Training  [    50/145000]  eta: 13 days, 16:56:53  lr: 0.0000 (0.0000)  wd: 0.0400 (0.0400)  mom: 0.9920 (0.9920)  last_layer_lr: 0.0000 (0.0000)  current_batch_size: 32.0000 (32.0000)  total_loss: 13.6877 (13.6933)  dino_local_crops_loss: 9.8232 (9.8268)  dino_global_crops_loss: 1.2135 (1.2146)  koleo_loss: -0.0070 (-0.0070)  ibot_loss: 2.6514 (2.6520)  time: 1.688462  data: 0.000493  max mem: 24072
+I20251117 21:31:35 553248 dinov2 helpers.py:102] Training  [    60/145000]  eta: 11 days, 20:48:54  lr: 0.0000 (0.0000)  wd: 0.0400 (0.0400)  mom: 0.9920 (0.9920)  last_layer_lr: 0.0000 (0.0000)  current_batch_size: 32.0000 (32.0000)  total_loss: 13.6880 (13.6925)  dino_local_crops_loss: 9.8235 (9.8263)  dino_global_crops_loss: 1.2138 (1.2145)  koleo_loss: -0.0071 (-0.0070)  ibot_loss: 2.6510 (2.6518)  time: 1.575047  data: 0.000492  max mem: 24073
+I20251117 21:31:51 553248 dinov2 helpers.py:102] Training  [    70/145000]  eta: 10 days, 13:41:57  lr: 0.0000 (0.0000)  wd: 0.0400 (0.0400)  mom: 0.9920 (0.9920)  last_layer_lr: 0.0000 (0.0000)  current_batch_size: 32.0000 (32.0000)  total_loss: 13.6862 (13.6915)  dino_local_crops_loss: 9.8226 (9.8256)  dino_global_crops_loss: 1.2142 (1.2144)  koleo_loss: -0.0077 (-0.0072)  ibot_loss: 2.6500 (2.6514)  time: 1.538330  data: 0.000180  max mem: 24073
+I20251117 21:32:11 553248 dinov2 helpers.py:102] Training  [    80/145000]  eta: 9 days, 16:30:56  lr: 0.0000 (0.0000)  wd: 0.0400 (0.0400)  mom: 0.9920 (0.9920)  last_layer_lr: 0.0000 (0.0000)  current_batch_size: 32.0000 (32.0000)  total_loss: 13.6843 (13.6900)  dino_local_crops_loss: 9.8197 (9.8246)  dino_global_crops_loss: 1.2141 (1.2143)  koleo_loss: -0.0084 (-0.0073)  ibot_loss: 2.6488 (2.6510)  time: 1.816454  data: 0.000151  max mem: 24073
+I20251117 21:32:31 553248 dinov2 helpers.py:102] Training  [    90/145000]  eta: 8 days, 23:36:23  lr: 0.0000 (0.0000)  wd: 0.0400 (0.0400)  mom: 0.9920 (0.9920)  last_layer_lr: 0.0000 (0.0000)  current_batch_size: 32.0000 (32.0000)  total_loss: 13.6727 (13.6877)  dino_local_crops_loss: 9.8130 (9.8232)  dino_global_crops_loss: 1.2122 (1.2140)  koleo_loss: -0.0086 (-0.0075)  ibot_loss: 2.6469 (2.6505)  time: 1.999906  data: 0.000212  max mem: 24073
+I20251117 21:32:47 553248 dinov2 helpers.py:102] Training  [   100/145000]  eta: 8 days, 8:38:37  lr: 0.0000 (0.0000)  wd: 0.0400 (0.0400)  mom: 0.9920 (0.9920)  last_layer_lr: 0.0000 (0.0000)  current_batch_size: 32.0000 (32.0000)  total_loss: 13.6669 (13.6854)  dino_local_crops_loss: 9.8101 (9.8217)  dino_global_crops_loss: 1.2113 (1.2138)  koleo_loss: -0.0096 (-0.0078)  ibot_loss: 2.6453 (2.6499)  time: 1.781176  data: 0.065853  max mem: 24074
+I20251117 21:33:02 553248 dinov2 helpers.py:102] Training  [   110/145000]  eta: 7 days, 20:00:03  lr: 0.0000 (0.0000)  wd: 0.0400 (0.0400)  mom: 0.9920 (0.9920)  last_layer_lr: 0.0000 (0.0000)  current_batch_size: 32.0000 (32.0000)  total_loss: 13.6586 (13.6828)  dino_local_crops_loss: 9.8051 (9.8199)  dino_global_crops_loss: 1.2113 (1.2135)  koleo_loss: -0.0098 (-0.0080)  ibot_loss: 2.6439 (2.6493)  time: 1.553671  data: 0.094286  max mem: 24074
+I20251117 21:33:18 553248 dinov2 helpers.py:102] Training  [   120/145000]  eta: 7 days, 9:55:06  lr: 0.0000 (0.0000)  wd: 0.0400 (0.0400)  mom: 0.9920 (0.9920)  last_layer_lr: 0.0000 (0.0000)  current_batch_size: 32.0000 (32.0000)  total_loss: 13.6585 (13.6804)  dino_local_crops_loss: 9.8029 (9.8183)  dino_global_crops_loss: 1.2114 (1.2134)  koleo_loss: -0.0105 (-0.0082)  ibot_loss: 2.6422 (2.6487)  time: 1.572781  data: 0.155157  max mem: 24074
+I20251117 21:33:36 553248 dinov2 helpers.py:102] Training  [   130/145000]  eta: 7 days, 1:57:50  lr: 0.0000 (0.0000)  wd: 0.0400 (0.0400)  mom: 0.9920 (0.9920)  last_layer_lr: 0.0000 (0.0000)  current_batch_size: 32.0000 (32.0000)  total_loss: 13.6501 (13.6778)  dino_local_crops_loss: 9.7978 (9.8166)  dino_global_crops_loss: 1.2114 (1.2133)  koleo_loss: -0.0106 (-0.0084)  ibot_loss: 2.6403 (2.6480)  time: 1.739541  data: 0.313069  max mem: 24074
+I20251117 21:33:53 553248 dinov2 helpers.py:102] Training  [   140/145000]  eta: 6 days, 18:30:59  lr: 0.0000 (0.0000)  wd: 0.0400 (0.0400)  mom: 0.9920 (0.9920)  last_layer_lr: 0.0000 (0.0000)  current_batch_size: 32.0000 (32.0000)  total_loss: 13.6431 (13.6751)  dino_local_crops_loss: 9.7935 (9.8148)  dino_global_crops_loss: 1.2106 (1.2131)  koleo_loss: -0.0106 (-0.0085)  ibot_loss: 2.6391 (2.6472)  time: 1.726782  data: 0.268220  max mem: 24074
+I20251117 21:34:18 553248 dinov2 helpers.py:102] Training  [   150/145000]  eta: 6 days, 14:37:30  lr: 0.0000 (0.0000)  wd: 0.0400 (0.0400)  mom: 0.9920 (0.9920)  last_layer_lr: 0.0000 (0.0000)  current_batch_size: 32.0000 (32.0000)  total_loss: 13.6293 (13.6719)  dino_local_crops_loss: 9.7861 (9.8126)  dino_global_crops_loss: 1.2092 (1.2128)  koleo_loss: -0.0116 (-0.0087)  ibot_loss: 2.6361 (2.6465)  time: 2.100370  data: 0.629970  max mem: 24074
+I20251117 21:34:35 553248 dinov2 helpers.py:102] Training  [   160/145000]  eta: 6 days, 8:58:25  lr: 0.0000 (0.0000)  wd: 0.0400 (0.0400)  mom: 0.9920 (0.9920)  last_layer_lr: 0.0000 (0.0000)  current_batch_size: 32.0000 (32.0000)  total_loss: 13.6237 (13.6687)  dino_local_crops_loss: 9.7802 (9.8106)  dino_global_crops_loss: 1.2082 (1.2125)  koleo_loss: -0.0116 (-0.0088)  ibot_loss: 2.6346 (2.6456)  time: 2.133911  data: 0.660336  max mem: 24074
+I20251117 21:34:50 553248 dinov2 helpers.py:102] Training  [   170/145000]  eta: 6 days, 3:26:25  lr: 0.0000 (0.0000)  wd: 0.0400 (0.0400)  mom: 0.9920 (0.9920)  last_layer_lr: 0.0000 (0.0000)  current_batch_size: 32.0000 (32.0000)  total_loss: 13.6183 (13.6657)  dino_local_crops_loss: 9.7805 (9.8087)  dino_global_crops_loss: 1.2084 (1.2123)  koleo_loss: -0.0124 (-0.0090)  ibot_loss: 2.6317 (2.6448)  time: 1.569980  data: 0.112187  max mem: 24074
+I20251117 21:35:04 553248 dinov2 helpers.py:102] Training  [   180/145000]  eta: 5 days, 22:31:52  lr: 0.0000 (0.0000)  wd: 0.0400 (0.0400)  mom: 0.9920 (0.9920)  last_layer_lr: 0.0000 (0.0000)  current_batch_size: 32.0000 (32.0000)  total_loss: 13.6124 (13.6625)  dino_local_crops_loss: 9.7755 (9.8066)  dino_global_crops_loss: 1.2076 (1.2120)  koleo_loss: -0.0129 (-0.0092)  ibot_loss: 2.6295 (2.6438)  time: 1.457684  data: 0.000144  max mem: 24074
+I20251117 21:35:22 553248 dinov2 helpers.py:102] Training  [   190/145000]  eta: 5 days, 18:39:25  lr: 0.0000 (0.0000)  wd: 0.0400 (0.0400)  mom: 0.9920 (0.9920)  last_layer_lr: 0.0000 (0.0000)  current_batch_size: 32.0000 (32.0000)  total_loss: 13.6007 (13.6591)  dino_local_crops_loss: 9.7653 (9.8044)  dino_global_crops_loss: 1.2075 (1.2118)  koleo_loss: -0.0134 (-0.0095)  ibot_loss: 2.6260 (2.6429)  time: 1.584389  data: 0.000145  max mem: 24074
+I20251117 21:35:38 553248 dinov2 helpers.py:102] Training  [   200/145000]  eta: 5 days, 15:07:31  lr: 0.0000 (0.0000)  wd: 0.0400 (0.0400)  mom: 0.9920 (0.9920)  last_layer_lr: 0.0000 (0.0000)  current_batch_size: 32.0000 (32.0000)  total_loss: 13.5925 (13.6556)  dino_local_crops_loss: 9.7613 (9.8022)  dino_global_crops_loss: 1.2068 (1.2115)  koleo_loss: -0.0139 (-0.0096)  ibot_loss: 2.6238 (2.6419)  time: 1.697579  data: 0.000156  max mem: 24074
+I20251117 21:35:58 553248 dinov2 helpers.py:102] Training  [   210/145000]  eta: 5 days, 12:23:14  lr: 0.0000 (0.0000)  wd: 0.0400 (0.0400)  mom: 0.9920 (0.9920)  last_layer_lr: 0.0000 (0.0000)  current_batch_size: 32.0000 (32.0000)  total_loss: 13.5824 (13.6518)  dino_local_crops_loss: 9.7540 (9.7998)  dino_global_crops_loss: 1.2051 (1.2112)  koleo_loss: -0.0137 (-0.0098)  ibot_loss: 2.6211 (2.6408)  time: 1.807465  data: 0.118937  max mem: 24074
+I20251117 21:36:14 553248 dinov2 helpers.py:102] Training  [   220/145000]  eta: 5 days, 9:26:35  lr: 0.0000 (0.0000)  wd: 0.0400 (0.0400)  mom: 0.9920 (0.9920)  last_layer_lr: 0.0000 (0.0000)  current_batch_size: 32.0000 (32.0000)  total_loss: 13.5753 (13.6482)  dino_local_crops_loss: 9.7503 (9.7974)  dino_global_crops_loss: 1.2046 (1.2109)  koleo_loss: -0.0136 (-0.0099)  ibot_loss: 2.6192 (2.6398)  time: 1.803380  data: 0.118969  max mem: 24074
+I20251117 21:36:31 553248 dinov2 helpers.py:102] Training  [   230/145000]  eta: 5 days, 6:45:04  lr: 0.0000 (0.0000)  wd: 0.0400 (0.0400)  mom: 0.9920 (0.9920)  last_layer_lr: 0.0000 (0.0000)  current_batch_size: 32.0000 (32.0000)  total_loss: 13.5623 (13.6441)  dino_local_crops_loss: 9.7415 (9.7948)  dino_global_crops_loss: 1.2037 (1.2106)  koleo_loss: -0.0136 (-0.0101)  ibot_loss: 2.6167 (2.6387)  time: 1.678129  data: 0.000224  max mem: 24074
+I20251117 21:36:47 553248 dinov2 helpers.py:102] Training  [   240/145000]  eta: 5 days, 4:05:22  lr: 0.0000 (0.0000)  wd: 0.0400 (0.0400)  mom: 0.9920 (0.9920)  last_layer_lr: 0.0000 (0.0000)  current_batch_size: 32.0000 (32.0000)  total_loss: 13.5486 (13.6400)  dino_local_crops_loss: 9.7323 (9.7920)  dino_global_crops_loss: 1.2021 (1.2103)  koleo_loss: -0.0138 (-0.0102)  ibot_loss: 2.6136 (2.6377)  time: 1.619640  data: 0.000192  max mem: 24074
+I20251117 21:37:04 553248 dinov2 helpers.py:102] Training  [   250/145000]  eta: 5 days, 1:53:46  lr: 0.0000 (0.0000)  wd: 0.0400 (0.0400)  mom: 0.9920 (0.9920)  last_layer_lr: 0.0000 (0.0000)  current_batch_size: 32.0000 (32.0000)  total_loss: 13.5430 (13.6361)  dino_local_crops_loss: 9.7285 (9.7895)  dino_global_crops_loss: 1.2021 (1.2100)  koleo_loss: -0.0141 (-0.0104)  ibot_loss: 2.6115 (2.6366)  time: 1.641990  data: 0.000153  max mem: 24074
+I20251117 21:37:24 553248 dinov2 helpers.py:102] Training  [   260/145000]  eta: 5 days, 0:14:58  lr: 0.0000 (0.0000)  wd: 0.0400 (0.0400)  mom: 0.9920 (0.9920)  last_layer_lr: 0.0000 (0.0000)  current_batch_size: 32.0000 (32.0000)  total_loss: 13.5335 (13.6320)  dino_local_crops_loss: 9.7221 (9.7869)  dino_global_crops_loss: 1.2022 (1.2096)  koleo_loss: -0.0141 (-0.0105)  ibot_loss: 2.6098 (2.6355)  time: 1.845130  data: 0.000162  max mem: 24074
+I20251117 21:37:41 553248 dinov2 helpers.py:102] Training  [   270/145000]  eta: 4 days, 22:23:59  lr: 0.0000 (0.0000)  wd: 0.0400 (0.0400)  mom: 0.9920 (0.9920)  last_layer_lr: 0.0000 (0.0000)  current_batch_size: 32.0000 (32.0000)  total_loss: 13.5284 (13.6283)  dino_local_crops_loss: 9.7196 (9.7845)  dino_global_crops_loss: 1.2022 (1.2094)  koleo_loss: -0.0150 (-0.0107)  ibot_loss: 2.6074 (2.6344)  time: 1.858867  data: 0.000152  max mem: 24074
+I20251117 21:38:00 553248 dinov2 helpers.py:102] Training  [   280/145000]  eta: 4 days, 20:54:25  lr: 0.0000 (0.0000)  wd: 0.0400 (0.0400)  mom: 0.9920 (0.9920)  last_layer_lr: 0.0000 (0.0000)  current_batch_size: 32.0000 (32.0000)  total_loss: 13.5248 (13.6244)  dino_local_crops_loss: 9.7168 (9.7819)  dino_global_crops_loss: 1.2026 (1.2091)  koleo_loss: -0.0157 (-0.0108)  ibot_loss: 2.6047 (2.6334)  time: 1.828505  data: 0.000138  max mem: 24074
+I20251117 21:38:19 553248 dinov2 helpers.py:102] Training  [   290/145000]  eta: 4 days, 19:30:27  lr: 0.0000 (0.0000)  wd: 0.0400 (0.0400)  mom: 0.9920 (0.9920)  last_layer_lr: 0.0000 (0.0000)  current_batch_size: 32.0000 (32.0000)  total_loss: 13.5105 (13.6204)  dino_local_crops_loss: 9.7061 (9.7793)  dino_global_crops_loss: 1.2006 (1.2088)  koleo_loss: -0.0151 (-0.0110)  ibot_loss: 2.6035 (2.6323)  time: 1.904104  data: 0.000197  max mem: 24074
+I20251117 21:38:37 553248 dinov2 helpers.py:102] Training  [   300/145000]  eta: 4 days, 17:57:10  lr: 0.0000 (0.0000)  wd: 0.0400 (0.0400)  mom: 0.9920 (0.9920)  last_layer_lr: 0.0000 (0.0000)  current_batch_size: 32.0000 (32.0000)  total_loss: 13.5073 (13.6165)  dino_local_crops_loss: 9.7045 (9.7767)  dino_global_crops_loss: 1.1995 (1.2085)  koleo_loss: -0.0156 (-0.0111)  ibot_loss: 2.6019 (2.6313)  time: 1.808045  data: 0.000188  max mem: 24074
+I20251117 21:38:53 553248 dinov2 helpers.py:102] Training  [   310/145000]  eta: 4 days, 16:27:22  lr: 0.0000 (0.0000)  wd: 0.0400 (0.0400)  mom: 0.9920 (0.9920)  last_layer_lr: 0.0000 (0.0000)  current_batch_size: 32.0000 (32.0000)  total_loss: 13.4976 (13.6127)  dino_local_crops_loss: 9.6989 (9.7743)  dino_global_crops_loss: 1.1982 (1.2082)  koleo_loss: -0.0160 (-0.0113)  ibot_loss: 2.6001 (2.6303)  time: 1.699121  data: 0.000126  max mem: 24074
+I20251117 21:39:10 553248 dinov2 helpers.py:102] Training  [   320/145000]  eta: 4 days, 15:02:04  lr: 0.0000 (0.0000)  wd: 0.0400 (0.0400)  mom: 0.9920 (0.9920)  last_layer_lr: 0.0000 (0.0000)  current_batch_size: 32.0000 (32.0000)  total_loss: 13.4924 (13.6090)  dino_local_crops_loss: 9.6949 (9.7719)  dino_global_crops_loss: 1.1989 (1.2079)  koleo_loss: -0.0165 (-0.0114)  ibot_loss: 2.5984 (2.6293)  time: 1.675816  data: 0.000140  max mem: 24074
