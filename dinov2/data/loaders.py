@@ -55,6 +55,9 @@ def _parse_dataset_str(dataset_str: str):
         key, value = token.split("=")
         # assert key in ("root", "extra", "split")
         kwargs[key] = value
+        print(key, type(value))
+        print(value)
+        print("3333333333333333333333333333333333333333333333333333333")
 
     if name == "ImageNet":
         class_ = ImageNet

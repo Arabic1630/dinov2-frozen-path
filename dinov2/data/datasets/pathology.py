@@ -91,24 +91,29 @@ class Pathology(ExtendedVisionDataset):
             max_slide_num = 0
             for idx, row in _entry_dataset_df.iterrows():
                 patches_path = row["patches_path"]
-                if self.sshid[0]=="11":
+                print(patches_path)
+                print(self.sshid)
+                print(self.sshid[0],"?????",self.sshid[1])
+                if self.sshid=="11":
+                    print("1111111111111111111111111111111111111111111111111111111")
                     if patches_path.startswith("/data"):
                         patches_path = patches_path.replace("/data", "/nfs/data13", 1)
+                        print("2222222222222222222222222222222222222222222222222222222")
                     elif patches_path.startswith("/nfs/data11"):
                         patches_path = patches_path.replace("/nfs/data11", "/data", 1)
-                elif self.sshid[0]=="448":
+                elif self.sshid=="448":
                     patches_path = patches_path.replace("/20x_224px_0px_overlap/", "/40x_448px_0px_overlap/")
                         
                 max_slide_num = max(max_slide_num, len(os.listdir(patches_path)))
             for idx, row in _entry_dataset_df.iterrows():
                 patches_path = row["patches_path"]
 
-                if self.sshid[0]=="11":
+                if self.sshid=="11":
                     if patches_path.startswith("/data"):
                         patches_path = patches_path.replace("/data", "/nfs/data13", 1)
                     elif patches_path.startswith("/nfs/data11"):
                         patches_path = patches_path.replace("/nfs/data11", "/data", 1)
-                elif self.sshid[0]=="448":
+                elif self.sshid=="448":
                     patches_path = patches_path.replace("/20x_224px_0px_overlap/", "/40x_448px_0px_overlap/")
 
                 pad_slide_num = max_slide_num - len(os.listdir(patches_path))
@@ -128,12 +133,12 @@ class Pathology(ExtendedVisionDataset):
         dataset_path = str(entry_dataset[dataset_index],encoding="utf-8")
         slide_name = str(entry_slide[dataset_index][dir_index],encoding="utf-8")
 
-        if self.sshid[0]=="11":
+        if self.sshid=="11":
             if dataset_path.startswith("/data"):
                 dataset_path = dataset_path.replace("/data", "/nfs/data13", 1)
             elif dataset_path.startswith("/nfs/data11"):
                 dataset_path = dataset_path.replace("/nfs/data11", "/data", 1)
-        elif self.sshid[0]=="448":
+        elif self.sshid=="448":
             dataset_path = dataset_path.replace("/20x_224px_0px_overlap/", "/40x_448px_0px_overlap/")
 
         image_full_path = os.path.join(dataset_path, slide_name,f"{slide_name}_patch_{actual_index}.jpeg")

@@ -7,38 +7,38 @@ compute_precision:
     backbone:
       sharding_strategy: SHARD_GRAD_OP
       mixed_precision:
-        param_dtype: fp16
-        reduce_dtype: fp16
+        param_dtype: fp32
+        reduce_dtype: fp32
         buffer_dtype: fp32
     dino_head:
       sharding_strategy: SHARD_GRAD_OP
       mixed_precision:
-        param_dtype: fp16
-        reduce_dtype: fp16
-        buffer_dtype: fp32
-    ibot_head:
-      sharding_strategy: SHARD_GRAD_OP
-      mixed_precision:
-        param_dtype: fp16
-        reduce_dtype: fp16
-        buffer_dtype: fp32
-  student:
-    backbone:
-      sharding_strategy: SHARD_GRAD_OP
-      mixed_precision:
-        param_dtype: fp16
-        reduce_dtype: fp16
-        buffer_dtype: fp32
-    dino_head:
-      sharding_strategy: SHARD_GRAD_OP
-      mixed_precision:
-        param_dtype: fp16
+        param_dtype: fp32
         reduce_dtype: fp32
         buffer_dtype: fp32
     ibot_head:
       sharding_strategy: SHARD_GRAD_OP
       mixed_precision:
-        param_dtype: fp16
+        param_dtype: fp32
+        reduce_dtype: fp32
+        buffer_dtype: fp32
+  student:
+    backbone:
+      sharding_strategy: SHARD_GRAD_OP
+      mixed_precision:
+        param_dtype: fp32
+        reduce_dtype: fp32
+        buffer_dtype: fp32
+    dino_head:
+      sharding_strategy: SHARD_GRAD_OP
+      mixed_precision:
+        param_dtype: fp32
+        reduce_dtype: fp32
+        buffer_dtype: fp32
+    ibot_head:
+      sharding_strategy: SHARD_GRAD_OP
+      mixed_precision:
+        param_dtype: fp32
         reduce_dtype: fp32
         buffer_dtype: fp32
 dino:
@@ -60,14 +60,14 @@ ibot:
   head_nlayers: 3
   head_hidden_dim: 2048
 train:
-  batch_size_per_gpu: 96 # 256 for vit_s, 32 for vit_g
+  batch_size_per_gpu: 16 # 256 for vit_s, 32 for vit_g
   dataset_path: Pathology:split=TRAIN:root=./dataset/pathology-all-224/:extra=./dataset/pathology-all-224/:sshid=13
   sshid: 13
   output_dir: . # change to something reasonable
   saveckp_freq: 20
   seed: 0
   num_workers: 10  
-  OFFICIAL_EPOCH_LENGTH: 6650 # change depending on your dataset
+  OFFICIAL_EPOCH_LENGTH: 19950 # change depending on your dataset
   cache_dataset: true
   centering: "sinkhorn_knopp" # or "sinkhorn_knopp" or "centering"
   ###权重初始化
@@ -77,7 +77,7 @@ student:
   patch_size: 16 # important to use the checkpoints!
   drop_path_rate: 0.1 #0.4 #？？0.3
   layerscale: 1.0e-05
-  drop_path_uniform: false # 训练时随机"跳过"某些残差块. 默认 true（v3也是true）：所有层使用相同的 drop path rate   false:从浅层到深层线性递增 drop path rate
+  drop_path_uniform: false # original true？？
   pretrained_weights:  #22222222222222
   ffn_layer: "mlp" #"swiglufused" #or 
   block_chunks: 0 #？？？？
